@@ -136,7 +136,7 @@
     display: inline-flex; align-items: center; gap: 8px;
     background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
     border-radius: 20px; padding: 8px 16px; font-size: 0.82rem; font-weight: 600;
-    margin-bottom: 28px; backdrop-filter: blur(8px);
+    margin-bottom: 28px; backdrop-filter: blur(8px); white-space: nowrap;
   }
   .hero-badge span { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.2)} }
@@ -677,16 +677,38 @@
   .mobile-drawer-panel {
     position:absolute; top:0; right:0; bottom:0; width:280px;
     background:white; transform:translateX(100%); transition:transform 0.3s ease;
-    padding:80px 24px 32px;
-    display:flex; flex-direction:column; gap:8px;
+    padding:20px 24px 32px;
+    display:flex; flex-direction:column; gap:0;
+    overflow-y: auto;
   }
   .mobile-drawer.open .mobile-drawer-panel { transform:translateX(0); }
+  .mobile-drawer-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 0; margin-bottom:24px; border-bottom:1.5px solid var(--border);
+  }
+  .mobile-drawer-title {
+    font-family:'Sora',sans-serif; font-weight:700; font-size:1rem;
+    color:var(--text);
+  }
+  .mobile-drawer-close {
+    background:none; border:none; font-size:1.5rem;
+    cursor:pointer; padding:0; color:var(--text-muted);
+    transition:color var(--transition);
+  }
+  .mobile-drawer-close:hover { color:var(--text); }
+  .mobile-drawer-section {
+    display:flex; flex-direction:column; gap:2px; margin-bottom:20px;
+  }
   .mobile-drawer-link {
-    padding:14px 16px; border-radius:10px; font-weight:600;
+    padding:14px 16px; border-radius:10px; font-weight:500;
     text-decoration:none; color:var(--text);
     transition:all var(--transition); display:block; cursor:pointer;
+    font-size:0.95rem;
   }
   .mobile-drawer-link:hover { background:var(--blue-light); color:var(--blue); }
+  .mobile-drawer-lang {
+    margin-top:auto; padding-top:16px; border-top:1.5px solid var(--border);
+  }
 
   /* ── TOAST ── */
   .toast {
@@ -713,6 +735,8 @@
   @media(max-width:700px) {
     .nav-links { display:none; }
     .hamburger { display:flex; }
+    .lang-toggle { display:none; }
+    .btn-cta-sm { display:none; }
     .hero h1 { font-size:2rem; }
     .hero-content { padding:48px 24px; }
     .footer-top { grid-template-columns:1fr; }
@@ -739,7 +763,7 @@
     <li><a href="#" onclick="showPage('home')">Beranda</a></li>
     <li><a href="#" onclick="showPage('test')">Mulai Tes</a></li>
     <li><a href="#" onclick="showPage('learn')">Edukasi</a></li>
-    <li><a href="#" onclick="showPage('program')">Program</a></li>
+    <!-- <li><a href="#" onclick="showPage('program')">Program</a></li> -->
     <li><a href="#" onclick="showPage('about')">Tentang</a></li>
   </ul>
   <div class="nav-right">
@@ -759,13 +783,21 @@
 <!-- MOBILE DRAWER -->
 <div class="mobile-drawer" id="mobileDrawer" onclick="closeDrawer(event)">
   <div class="mobile-drawer-panel">
-    <a class="mobile-drawer-link" onclick="showPage('home');closeDrawer()" data-t="nav_home">Beranda</a>
-    <a class="mobile-drawer-link" onclick="showPage('test');closeDrawer()" data-t="nav_test">Mulai Tes</a>
-    <a class="mobile-drawer-link" onclick="showPage('learn');closeDrawer()" data-t="nav_learn">Edukasi</a>
-    <a class="mobile-drawer-link" onclick="showPage('program');closeDrawer()" data-t="nav_program">Program</a>
-    <a class="mobile-drawer-link" onclick="showPage('about');closeDrawer()" data-t="nav_about">Tentang</a>
-    <div style="margin-top:16px">
-      <div class="lang-toggle" style="justify-content:center">
+    <div class="mobile-drawer-header">
+      <span class="mobile-drawer-title">Menu</span>
+      <button class="mobile-drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    
+    <div class="mobile-drawer-section">
+      <a class="mobile-drawer-link" onclick="showPage('home');closeDrawer()" data-t="nav_home">🏠 Beranda</a>
+      <a class="mobile-drawer-link" onclick="showPage('test');closeDrawer()" data-t="nav_test">🩹 Mulai Tes</a>
+      <a class="mobile-drawer-link" onclick="showPage('learn');closeDrawer()" data-t="nav_learn">📚 Edukasi</a>
+      <!-- <a class="mobile-drawer-link" onclick="showPage('program');closeDrawer()" data-t="nav_program">📋 Program</a> -->
+      <a class="mobile-drawer-link" onclick="showPage('about');closeDrawer()" data-t="nav_about">ℹ️ Tentang</a>
+    </div>
+    
+    <div class="mobile-drawer-lang">
+      <div class="lang-toggle" style="justify-content:center;width:100%">
         <button class="lang-btn active" id="btn-id-m" onclick="setLang('id')">ID</button>
         <button class="lang-btn" id="btn-en-m" onclick="setLang('en')">EN</button>
       </div>
@@ -785,10 +817,10 @@
     </div>
     <div class="hero-content">
       <div class="hero-text">
-        <div class="hero-badge">
+        <!-- <div class="hero-badge">
           <span></span>
           <span data-t="hero_badge">Tes FINDRISC Tervalidasi Secara Global</span>
-        </div>
+        </div> -->
         <h1 data-t="hero_title">Cek Risiko <em>Diabetes Tipe 2</em> Anda — Gratis & Hanya 3 Menit</h1>
         <p data-t="hero_sub">Tes ilmiah FINDRISC yang tervalidasi secara global — tidak perlu tes darah, tidak perlu daftar. Ketahui risiko Anda sekarang.</p>
         <div class="hero-cta-group">
@@ -804,10 +836,10 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             <span data-t="trust1">Berbasis Sains</span>
           </div>
-          <div class="trust-badge">
+          <!-- <div class="trust-badge">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
             <span data-t="trust2">500.000+ Pengguna</span>
-          </div>
+          </div> -->
           <div class="trust-badge">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
             <span data-t="trust3">Gratis Selamanya</span>
@@ -841,7 +873,7 @@
     </div>
   </section>
 
-  <!-- STATS BAR -->
+  <!-- STATS BAR (COMMENTED OUT)
   <div class="stats-bar">
     <div class="stats-grid">
       <div class="stat-item">
@@ -862,6 +894,7 @@
       </div>
     </div>
   </div>
+  -->
 
   <!-- HOW IT WORKS -->
   <section class="section how-it-works">
@@ -965,7 +998,7 @@
     </div>
   </section>
 
-  <!-- TESTIMONIALS -->
+  <!-- TESTIMONIALS (COMMENTED OUT)
   <section class="section testimonials">
     <div class="section-inner">
       <div class="section-tag" data-t="testi_tag">Testimoni</div>
@@ -1012,8 +1045,8 @@
       </div>
     </div>
   </section>
+  -->
 
-  <!-- SHARE SECTION -->
   <div class="share-section">
     <div style="max-width:700px;margin:0 auto">
       <h2 style="font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:12px" data-t="share_title">Bagikan Tes Ini</h2>
@@ -1026,6 +1059,7 @@
       </div>
     </div>
   </div>
+ 
 
   <!-- FOOTER -->
   <footer>
@@ -1045,7 +1079,7 @@
             <li><a href="#" onclick="showPage('home')" data-t="nav_home">Beranda</a></li>
             <li><a href="#" onclick="showPage('test')" data-t="nav_test">Mulai Tes</a></li>
             <li><a href="#" onclick="showPage('results')" data-t="nav_results">Lihat Hasil</a></li>
-            <li><a href="#" onclick="showPage('program')" data-t="nav_program">Program</a></li>
+            <!-- <li><a href="#" onclick="showPage('program')" data-t="nav_program">Program</a></li> -->
           </ul>
         </div>
         <div class="footer-col">
@@ -1155,9 +1189,10 @@
           <a href="#" class="share-btn" onclick="copyLink()" style="background:var(--bg);border-color:var(--border);color:var(--text)">🔗 <span data-t="copy_link">Salin Link</span></a>
         </div>
       </div>
+     
       <div class="result-actions">
         <button class="btn-outline" onclick="retakeTest()">🔄 <span data-t="retake">Tes Ulang</span></button>
-        <button class="btn-outline" onclick="showPage('program')">📋 <span data-t="view_program">Lihat Program</span></button>
+        <!-- <button class="btn-outline" onclick="showPage('program')">📋 <span data-t="view_program">Lihat Program</span></button> -->
         <button class="btn-outline" onclick="window.print()">🖨️ <span data-t="print">Cetak</span></button>
       </div>
     </div>
@@ -1165,6 +1200,7 @@
 </div>
 
 <!-- ═══════════════ PROGRAM PAGE ═══════════════ -->
+<!-- PAGE PROGRAM (COMMENTED OUT)
 <div class="page" id="page-program">
   <div class="static-page">
     <div class="program-hero">
@@ -1235,6 +1271,7 @@
     </div>
   </div>
 </div>
+-->
 
 <!-- ═══════════════ ABOUT PAGE ═══════════════ -->
 <div class="page" id="page-about">
@@ -1629,7 +1666,7 @@ const questions = [
 ];
 
 // ────────── STATE ──────────
-let lang = localStorage.getItem('lang') || (navigator.language.startsWith('en') ? 'en' : 'id');
+let lang = localStorage.getItem('lang') || 'id';
 let gender = null;
 let currentQ = 0;
 let answers = new Array(8).fill(null);
@@ -1678,8 +1715,10 @@ function showPage(page) {
 // ────────── MOBILE DRAWER ──────────
 function toggleDrawer() { document.getElementById('mobileDrawer').classList.toggle('open'); }
 function closeDrawer(e) {
-  if(!e || !e.target.closest('.mobile-drawer-panel') || e.target===document.getElementById('mobileDrawer'))
-    document.getElementById('mobileDrawer').classList.remove('open');
+  const drawer = document.getElementById('mobileDrawer');
+  // If called without event (from close button) or if clicking outside panel
+  if(!e || !e.target.closest('.mobile-drawer-panel') || e.target===drawer)
+    drawer.classList.remove('open');
 }
 
 // ────────── TEST ──────────
@@ -1762,7 +1801,7 @@ function renderQuestion() {
       <div class="option-text">
         <span class="option-label">${opt[lang]}</span>
       </div>
-      <span class="option-points">+${opt.pts}${lang==='id'?' poin':' pts'}</span>
+      <!-- <span class="option-points">+${opt.pts}${lang==='id'?' poin':' pts'}</span> -->
     </button>`;
   });
   html += '</div>';
@@ -1968,7 +2007,8 @@ function buildResults() {
     recsList.appendChild(div);
   });
 
-  // Upsell
+  // Upsell (COMMENTED OUT)
+  /*
   const upsellHTML = `
     <div class="upsell-section" style="margin-bottom:32px">
       <div class="upsell-badge">${lang==='id'?'📋 Program Pencegahan':'📋 Prevention Program'}</div>
@@ -2002,6 +2042,9 @@ function buildResults() {
     document.getElementById('upsell-top').innerHTML = '';
     document.getElementById('upsell-bottom').innerHTML = upsellHTML;
   }
+  */
+  document.getElementById('upsell-top').innerHTML = '';
+  document.getElementById('upsell-bottom').innerHTML = '';
 }
 
 function retakeTest() {
