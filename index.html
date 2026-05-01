@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CekDiabetes.id — Tes Risiko Diabetes FINDRISC Gratis</title>
+<meta name="description" content="Cek risiko diabetes tipe 2 Anda secara gratis dengan tes FINDRISC yang tervalidasi secara ilmiah. Hanya 3 menit, tidak perlu daftar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1A56A8;
+    --blue-dark: #0f3d7a;
+    --blue-light: #e8f0fb;
+    --teal: #0E7C5B;
+    --teal-light: #e6f5f0;
+    --amber: #C45A1A;
+    --amber-light: #fdf0e8;
+    --red: #B22020;
+    --red-light: #fce8e8;
+    --yellow: #d4a017;
+    --yellow-light: #fef9e7;
+    --bg: #F7F9FC;
+    --white: #FFFFFF;
+    --text: #111827;
+    --text-muted: #6B7280;
+    --border: #D1D5DB;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 4px 24px rgba(26,86,168,0.10);
+    --shadow-lg: 0 12px 48px rgba(26,86,168,0.18);
+    --transition: 0.22s cubic-bezier(.4,0,.2,1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: box-shadow var(--transition);
+  }
+  .navbar.scrolled { box-shadow: var(--shadow); }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-weight: 800; font-size: 1.2rem;
+  }
+  .nav-logo-icon {
+    width: 38px; height: 38px; background: var(--blue);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 1.1rem;
+  }
+  .nav-logo span.accent { color: var(--blue); }
+  .nav-links {
+    display: flex; align-items: center; gap: 6px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--text-muted);
+    font-size: 0.9rem; font-weight: 500;
+    padding: 8px 14px; border-radius: 8px;
+    transition: all var(--transition);
+  }
+  .nav-links a:hover { color: var(--blue); background: var(--blue-light); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .lang-toggle {
+    display: flex; align-items: center;
+    background: var(--bg); border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 3px; gap: 2px;
+  }
+  .lang-btn {
+    padding: 5px 12px; border-radius: 16px; border: none;
+    cursor: pointer; font-size: 0.8rem; font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    transition: all var(--transition); background: transparent; color: var(--text-muted);
+  }
+  .lang-btn.active { background: var(--blue); color: white; }
+  .btn-cta-sm {
+    background: var(--blue); color: white;
+    border: none; border-radius: 10px;
+    padding: 9px 20px; font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all var(--transition); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-cta-sm:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: var(--shadow); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+  .hamburger span { width: 24px; height: 2.5px; background: var(--text); border-radius: 2px; transition: all var(--transition); }
+
+  /* ── PAGE SYSTEM ── */
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ── HERO ── */
+  .hero {
+    padding-top: 68px;
+    background: linear-gradient(135deg, #0d2d5e 0%, #1A56A8 50%, #0E7C5B 100%);
+    position: relative; overflow: hidden;
+    min-height: 92vh; display: flex; align-items: center;
+  }
+  .hero-bg-shapes {
+    position: absolute; inset: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .hero-shape {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .hero-shape-1 { width: 600px; height: 600px; top: -200px; right: -150px; }
+  .hero-shape-2 { width: 400px; height: 400px; bottom: -100px; left: -100px; }
+  .hero-shape-3 { width: 200px; height: 200px; top: 40%; right: 15%; background: rgba(255,255,255,0.06); }
+  .hero-content {
+    max-width: 1120px; margin: 0 auto; padding: 80px 24px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  .hero-text { color: white; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px; padding: 8px 16px; font-size: 0.82rem; font-weight: 600;
+    margin-bottom: 28px; backdrop-filter: blur(8px);
+  }
+  .hero-badge span { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.2)} }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.18; margin-bottom: 20px; color: white;
+  }
+  .hero h1 em { font-style: italic; color: #93c5fd; }
+  .hero p {
+    font-size: 1.05rem; color: rgba(255,255,255,0.8);
+    margin-bottom: 36px; max-width: 480px; line-height: 1.7;
+  }
+  .hero-cta-group { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: white; color: var(--blue);
+    border: none; border-radius: 14px;
+    padding: 16px 32px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; font-family: 'Sora', sans-serif;
+    transition: all var(--transition); display: inline-flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+  .btn-ghost {
+    background: rgba(255,255,255,0.12); color: white;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 14px; padding: 15px 24px;
+    font-size: 0.92rem; font-weight: 600; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all var(--transition);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.2); }
+  .trust-badges {
+    margin-top: 36px; display: flex; gap: 20px; flex-wrap: wrap;
+  }
+  .trust-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px; padding: 8px 14px; font-size: 0.82rem; color: rgba(255,255,255,0.9);
+  }
+  .trust-badge svg { flex-shrink: 0; }
+
+  /* Hero right card */
+  .hero-card {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 24px; padding: 32px;
+    color: white;
+  }
+  .hero-card-title { font-family: 'Sora',sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 20px; opacity: 0.9; }
+  .score-preview {
+    display: flex; align-items: center; justify-content: center;
+    margin: 20px 0;
+  }
+  .score-ring {
+    width: 140px; height: 140px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .score-ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .score-ring-inner { text-align: center; z-index: 1; }
+  .score-ring-inner .score-num { font-family: 'Sora',sans-serif; font-size: 2.2rem; font-weight: 800; }
+  .score-ring-inner .score-label { font-size: 0.75rem; opacity: 0.8; }
+  .risk-level-badge {
+    display: inline-block; padding: 6px 16px; border-radius: 20px;
+    font-size: 0.82rem; font-weight: 700; margin-top: 12px;
+    background: rgba(180,70,0,0.8); border: 1px solid rgba(255,150,50,0.4);
+  }
+  .mini-recs { margin-top: 20px; }
+  .mini-rec {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0; border-top: 1px solid rgba(255,255,255,0.12);
+    font-size: 0.82rem; color: rgba(255,255,255,0.85);
+  }
+  .mini-rec:first-child { border-top: none; }
+  .mini-rec-icon { font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--blue-dark); color: white;
+    padding: 32px 24px;
+  }
+  .stats-grid {
+    max-width: 1120px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  }
+  .stat-item { text-align: center; padding: 16px; }
+  .stat-num {
+    font-family: 'Sora', sans-serif; font-size: 2rem; font-weight: 800;
+    color: #93c5fd; line-height: 1.1;
+  }
+  .stat-label { font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-top: 6px; line-height: 1.4; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 80px 24px; }
+  .section-inner { max-width: 1120px; margin: 0 auto; }
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blue-light); color: var(--blue);
+    border-radius: 20px; padding: 6px 16px; font-size: 0.8rem; font-weight: 700;
+    margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    line-height: 1.2; margin-bottom: 16px; color: var(--text);
+  }
+  .section-subtitle {
+    color: var(--text-muted); font-size: 1.05rem; max-width: 560px; line-height: 1.7;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-it-works { background: white; }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 56px;
+    position: relative;
+  }
+  .steps-grid::before {
+    content: ''; position: absolute; top: 36px; left: calc(16.67% + 16px);
+    right: calc(16.67% + 16px); height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--teal));
+    z-index: 0;
+  }
+  .step-card {
+    text-align: center; padding: 32px 24px;
+    background: var(--bg); border-radius: var(--radius);
+    border: 1.5px solid var(--border); position: relative; z-index: 1;
+    transition: all var(--transition);
+  }
+  .step-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--blue); }
+  .step-num {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--blue); color: white;
+    font-family: 'Sora',sans-serif; font-size: 1.5rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px; box-shadow: 0 0 0 8px var(--blue-light);
+  }
+  .step-title { font-family: 'Sora',sans-serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+  .step-desc { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── WHY FINDRISC ── */
+  .why-findrisc { background: var(--bg); }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 48px; }
+  .why-features { display: flex; flex-direction: column; gap: 20px; }
+  .why-feature {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 20px; background: white; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border); transition: all var(--transition);
+  }
+  .why-feature:hover { border-color: var(--blue); box-shadow: var(--shadow); }
+  .why-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--blue-light); color: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0;
+  }
+  .why-text h4 { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .why-text p { font-size: 0.85rem; color: var(--text-muted); }
+  .score-chart { background: white; border-radius: var(--radius); padding: 32px; border: 1.5px solid var(--border); }
+  .score-chart h4 { font-family:'Sora',sans-serif; font-weight: 700; margin-bottom: 20px; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .risk-bar-item { margin-bottom: 14px; }
+  .risk-bar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .risk-bar-label { font-size: 0.85rem; font-weight: 600; }
+  .risk-bar-range { font-size: 0.78rem; color: var(--text-muted); }
+  .risk-bar-track { height: 10px; background: var(--bg); border-radius: 5px; overflow: hidden; }
+  .risk-bar-fill { height: 100%; border-radius: 5px; transition: width 1s ease; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: white; }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .testi-card {
+    padding: 28px; border-radius: var(--radius);
+    border: 1.5px solid var(--border); transition: all var(--transition);
+    position: relative;
+  }
+  .testi-card:hover { border-color: var(--blue); box-shadow: var(--shadow); transform: translateY(-2px); }
+  .testi-card::before { content: '"'; font-family: 'DM Serif Display',serif; font-size: 4rem; color: var(--blue-light); position: absolute; top: 12px; left: 20px; line-height: 1; }
+  .testi-text { font-size: 0.92rem; line-height: 1.7; color: var(--text); margin-bottom: 20px; padding-top: 24px; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Sora',sans-serif; font-weight: 700; font-size: 1rem;
+    color: white; flex-shrink: 0;
+  }
+  .testi-name { font-weight: 700; font-size: 0.9rem; }
+  .testi-loc { font-size: 0.8rem; color: var(--text-muted); }
+  .stars { color: #f59e0b; font-size: 0.85rem; margin-bottom: 4px; }
+
+  /* ── SHARE SECTION ── */
+  .share-section { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); color: white; text-align: center; padding: 72px 24px; }
+  .share-btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 28px; }
+  .share-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 20px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1); color: white; cursor: pointer;
+    font-size: 0.88rem; font-weight: 600; font-family: 'DM Sans',sans-serif;
+    transition: all var(--transition); text-decoration: none;
+  }
+  .share-btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+  .share-btn.wa { border-color: #25D366; }
+  .share-btn.wa:hover { background: #25D366; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0d1b2e; color: rgba(255,255,255,0.75);
+    padding: 60px 24px 32px;
+  }
+  .footer-inner { max-width: 1120px; margin: 0 auto; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-brand { }
+  .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .footer-logo-icon { width: 36px; height: 36px; background: var(--blue); border-radius: 8px; display:flex;align-items:center;justify-content:center; color:white; font-size:1rem; }
+  .footer-logo-text { font-family:'Sora',sans-serif; font-weight:800; font-size:1.1rem; color:white; }
+  .footer-tagline { font-size:0.85rem; line-height:1.6; max-width:240px; margin-bottom:20px; }
+  .footer-disclaimer { font-size:0.78rem; line-height:1.5; background:rgba(255,255,255,0.06); padding:12px 14px; border-radius:8px; border-left:3px solid var(--amber); color:rgba(255,255,255,0.6); }
+  .footer-col h4 { color:white; font-weight:700; font-size:0.9rem; margin-bottom:16px; }
+  .footer-links { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .footer-links a { color:rgba(255,255,255,0.6); text-decoration:none; font-size:0.85rem; transition:color var(--transition); }
+  .footer-links a:hover { color:white; }
+  .footer-bottom { border-top:1px solid rgba(255,255,255,0.1); padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  .footer-copy { font-size:0.8rem; }
+  .footer-attribution { font-size:0.75rem; color:rgba(255,255,255,0.4); max-width:500px; line-height:1.5; }
+
+  /* ── TEST PAGE ── */
+  .test-page { padding-top: 68px; background: var(--bg); min-height: 100vh; }
+  .test-intro {
+    max-width: 600px; margin: 0 auto; padding: 60px 24px;
+    text-align: center;
+  }
+  .test-intro-icon {
+    width: 80px; height: 80px; background: var(--blue);
+    border-radius: 20px; display:flex; align-items:center; justify-content:center;
+    font-size: 2rem; margin: 0 auto 28px; box-shadow: 0 8px 32px rgba(26,86,168,0.3);
+  }
+  .test-intro h1 { font-family:'DM Serif Display',serif; font-size: 2.2rem; margin-bottom:16px; }
+  .test-intro p { color: var(--text-muted); margin-bottom:32px; }
+  .gender-select { display:flex; gap:16px; justify-content:center; margin-bottom:32px; }
+  .gender-btn {
+    flex:1; max-width:180px; padding:20px 16px; border-radius:14px;
+    border:2px solid var(--border); background:white; cursor:pointer;
+    text-align:center; transition:all var(--transition);
+    font-family:'DM Sans',sans-serif;
+  }
+  .gender-btn:hover { border-color:var(--blue); background:var(--blue-light); }
+  .gender-btn.selected { border-color:var(--blue); background:var(--blue-light); }
+  .gender-btn .gender-icon { font-size:2.5rem; margin-bottom:8px; }
+  .gender-btn .gender-label { font-weight:700; font-size:0.95rem; }
+  .privacy-note { font-size:0.8rem; color:var(--text-muted); margin-top:16px; }
+  .privacy-note a { color:var(--blue); }
+
+  /* Progress bar */
+  .test-progress-wrap {
+    max-width: 700px; margin: 0 auto; padding: 0 24px 0;
+  }
+  .test-progress-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .test-progress-label { font-size:0.85rem; font-weight:600; color:var(--text-muted); }
+  .test-progress-steps { font-size:0.85rem; font-weight:700; color:var(--blue); }
+  .progress-bar-track { height:6px; background:var(--border); border-radius:3px; }
+  .progress-bar-fill { height:100%; background:linear-gradient(90deg, var(--blue), var(--teal)); border-radius:3px; transition:width 0.4s ease; }
+
+  /* Question card */
+  .test-question-wrap {
+    max-width: 700px; margin: 0 auto; padding: 28px 24px 48px;
+  }
+  .question-card {
+    background:white; border-radius:20px; padding:36px;
+    box-shadow:var(--shadow); border:1.5px solid var(--border);
+  }
+  .question-number { font-size:0.8rem; font-weight:700; color:var(--blue); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:10px; }
+  .question-text { font-family:'Sora',sans-serif; font-size:1.3rem; font-weight:700; margin-bottom:8px; line-height:1.35; }
+  .question-hint { font-size:0.85rem; color:var(--text-muted); margin-bottom:28px; }
+  .options-list { display:flex; flex-direction:column; gap:10px; }
+  .option-btn {
+    width:100%; padding:16px 20px; border-radius:12px;
+    border:2px solid var(--border); background:var(--bg);
+    cursor:pointer; text-align:left; transition:all var(--transition);
+    display:flex; align-items:center; gap:14px;
+    font-family:'DM Sans',sans-serif;
+  }
+  .option-btn:hover { border-color:var(--blue); background:var(--blue-light); }
+  .option-btn.selected { border-color:var(--blue); background:var(--blue-light); }
+  .option-dot {
+    width:22px; height:22px; border-radius:50%;
+    border:2px solid var(--border); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    transition:all var(--transition);
+  }
+  .option-btn.selected .option-dot { border-color:var(--blue); background:var(--blue); }
+  .option-btn.selected .option-dot::after { content:''; width:8px; height:8px; background:white; border-radius:50%; display:block; }
+  .option-text { flex:1; }
+  .option-label { font-weight:600; font-size:0.95rem; display:block; }
+  .option-sublabel { font-size:0.8rem; color:var(--text-muted); display:block; }
+  .option-points { font-size:0.78rem; color:var(--text-muted); font-weight:600; margin-left:auto; }
+
+  /* BMI helper */
+  .bmi-helper {
+    background:var(--blue-light); border:1.5px solid #93c5fd;
+    border-radius:12px; padding:20px; margin-bottom:20px;
+  }
+  .bmi-helper h4 { font-size:0.9rem; font-weight:700; color:var(--blue); margin-bottom:12px; }
+  .bmi-inputs { display:flex; gap:12px; margin-bottom:12px; }
+  .bmi-input-group { flex:1; }
+  .bmi-input-group label { font-size:0.78rem; font-weight:600; color:var(--text-muted); display:block; margin-bottom:4px; }
+  .bmi-input {
+    width:100%; padding:10px 12px; border:1.5px solid var(--border);
+    border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.95rem;
+    outline:none; background:white; transition:border-color var(--transition);
+  }
+  .bmi-input:focus { border-color:var(--blue); }
+  .bmi-result { font-size:0.9rem; color:var(--blue); font-weight:700; }
+  .waist-guide {
+    background:var(--blue-light); border:1.5px solid #93c5fd;
+    border-radius:12px; padding:16px; margin-bottom:20px; font-size:0.85rem; color:var(--text);
+  }
+  .waist-guide strong { color:var(--blue); }
+
+  /* Test navigation */
+  .test-nav { display:flex; justify-content:space-between; align-items:center; margin-top:28px; }
+  .btn-back {
+    background:transparent; border:1.5px solid var(--border);
+    border-radius:10px; padding:12px 20px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.9rem;
+    color:var(--text-muted); transition:all var(--transition);
+    display:flex; align-items:center; gap:8px;
+  }
+  .btn-back:hover { border-color:var(--blue); color:var(--blue); }
+  .btn-next {
+    background:var(--blue); color:white; border:none;
+    border-radius:10px; padding:12px 28px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; font-weight:700; font-size:0.95rem;
+    transition:all var(--transition); display:flex; align-items:center; gap:8px;
+  }
+  .btn-next:hover { background:var(--blue-dark); }
+  .btn-next:disabled { opacity:0.4; cursor:not-allowed; }
+
+  /* Loading screen */
+  .loading-screen {
+    position:fixed; inset:0; z-index:9999;
+    background:linear-gradient(135deg, var(--blue-dark), var(--blue));
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    color:white; text-align:center;
+  }
+  .loading-screen h2 { font-family:'Sora',sans-serif; font-size:1.5rem; margin-top:28px; }
+  .loading-screen p { color:rgba(255,255,255,0.75); margin-top:8px; }
+  .spinner {
+    width:60px; height:60px; border:4px solid rgba(255,255,255,0.2);
+    border-top-color:white; border-radius:50%;
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* ── RESULTS PAGE ── */
+  .results-page { padding-top: 68px; background:var(--bg); min-height:100vh; }
+  .results-inner { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
+  .result-header { text-align:center; margin-bottom:48px; }
+  .result-header h1 { font-family:'DM Serif Display',serif; font-size:2rem; margin-bottom:8px; }
+  .result-header p { color:var(--text-muted); }
+
+  .score-display {
+    background:white; border-radius:24px; padding:48px 36px;
+    text-align:center; box-shadow:var(--shadow); margin-bottom:32px;
+    border:2px solid var(--border);
+  }
+  .score-circle {
+    width:180px; height:180px; border-radius:50%;
+    margin:0 auto 28px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    position:relative;
+  }
+  .score-circle svg { position:absolute; inset:0; transform:rotate(-90deg); }
+  .score-circle-inner { z-index:1; text-align:center; }
+  .score-big { font-family:'Sora',sans-serif; font-size:3rem; font-weight:900; line-height:1; }
+  .score-of { font-size:1rem; color:var(--text-muted); }
+  .risk-badge {
+    display:inline-block; padding:10px 24px; border-radius:24px;
+    font-family:'Sora',sans-serif; font-weight:700; font-size:1.1rem;
+    margin-bottom:16px;
+  }
+  .risk-message { font-size:1rem; color:var(--text-muted); max-width:480px; margin:0 auto; }
+  .risk-probability {
+    margin-top:20px; display:inline-flex; align-items:center; gap:8px;
+    background:var(--bg); border-radius:10px; padding:10px 20px;
+    font-weight:700; font-size:0.9rem;
+  }
+
+  /* Risk colors */
+  .risk-low .score-big { color:var(--teal); }
+  .risk-low .risk-badge { background:var(--teal-light); color:var(--teal); }
+  .risk-slight .score-big { color:var(--yellow); }
+  .risk-slight .risk-badge { background:var(--yellow-light); color:var(--yellow); }
+  .risk-moderate .score-big { color:var(--amber); }
+  .risk-moderate .risk-badge { background:var(--amber-light); color:var(--amber); }
+  .risk-high .score-big { color:var(--red); }
+  .risk-high .risk-badge { background:var(--red-light); color:var(--red); }
+  .risk-very-high .score-big { color:var(--red); }
+  .risk-very-high .risk-badge { background:var(--red-light); color:var(--red); }
+
+  /* Score meter */
+  .score-meter {
+    max-width:480px; margin:24px auto 0;
+  }
+  .meter-track { height:14px; background:var(--border); border-radius:7px; overflow:hidden; position:relative; }
+  .meter-segments { display:flex; height:100%; }
+  .meter-seg { height:100%; }
+  .meter-pointer { position:absolute; top:-4px; width:22px; height:22px; background:white; border:3px solid var(--text); border-radius:50%; transform:translateX(-50%); transition:left 1s ease; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+  .meter-labels { display:flex; justify-content:space-between; margin-top:6px; }
+  .meter-label { font-size:0.7rem; color:var(--text-muted); }
+
+  /* Recommendations */
+  .recs-section { background:white; border-radius:20px; padding:32px; box-shadow:var(--shadow); margin-bottom:32px; }
+  .recs-section h2 { font-family:'DM Serif Display',serif; font-size:1.6rem; margin-bottom:24px; }
+  .rec-item {
+    display:flex; gap:14px; padding:16px; border-radius:12px;
+    border:1.5px solid var(--border); margin-bottom:12px; transition:all var(--transition);
+  }
+  .rec-item:hover { border-color:var(--blue); }
+  .rec-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; flex-shrink:0; }
+  .rec-content h4 { font-weight:700; font-size:0.95rem; margin-bottom:4px; }
+  .rec-content p { font-size:0.85rem; color:var(--text-muted); line-height:1.5; }
+
+  /* Upsell */
+  .upsell-section {
+    background:linear-gradient(135deg, #0f3d7a, #1A56A8);
+    border-radius:24px; padding:40px; color:white; margin-bottom:32px;
+    position:relative; overflow:hidden;
+  }
+  .upsell-section::before {
+    content:''; position:absolute; top:-80px; right:-80px;
+    width:280px; height:280px; background:rgba(255,255,255,0.06);
+    border-radius:50%;
+  }
+  .upsell-badge {
+    display:inline-block; background:rgba(255,255,255,0.2);
+    border:1px solid rgba(255,255,255,0.3); border-radius:20px;
+    padding:5px 14px; font-size:0.8rem; font-weight:700; margin-bottom:16px;
+  }
+  .upsell-section h2 { font-family:'DM Serif Display',serif; font-size:1.8rem; margin-bottom:12px; line-height:1.25; }
+  .upsell-section > p { color:rgba(255,255,255,0.85); margin-bottom:24px; max-width:480px; }
+  .upsell-benefits { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:28px; }
+  .upsell-benefit { display:flex; align-items:center; gap:8px; font-size:0.88rem; color:rgba(255,255,255,0.9); }
+  .upsell-benefit span { font-size:1.1rem; }
+  .upsell-pricing { margin-bottom:24px; }
+  .upsell-price-orig { font-size:0.9rem; color:rgba(255,255,255,0.5); text-decoration:line-through; margin-bottom:4px; }
+  .upsell-price { font-family:'Sora',sans-serif; font-size:2rem; font-weight:800; color:#fde68a; }
+  .upsell-price sup { font-size:1rem; }
+  .upsell-cta {
+    background:white; color:var(--blue);
+    border:none; border-radius:14px; padding:16px 32px;
+    font-family:'Sora',sans-serif; font-size:1rem; font-weight:700;
+    cursor:pointer; transition:all var(--transition);
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .upsell-cta:hover { transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,0,0,0.3); }
+
+  /* Result actions */
+  .result-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
+  .btn-outline {
+    border:1.5px solid var(--border); background:white;
+    border-radius:10px; padding:12px 20px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; font-weight:600; font-size:0.9rem;
+    color:var(--text); transition:all var(--transition);
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-outline:hover { border-color:var(--blue); color:var(--blue); }
+
+  /* ── PROGRAM PAGE ── */
+  .program-hero {
+    padding-top:68px;
+    background:linear-gradient(135deg, #0d2d5e 0%, #1A56A8 100%);
+    padding-bottom:80px; padding-left:24px; padding-right:24px;
+    text-align:center; color:white;
+  }
+  .program-hero-inner { max-width:720px; margin:0 auto; padding-top:60px; }
+  .program-hero h1 { font-family:'DM Serif Display',serif; font-size:clamp(2rem,5vw,3rem); margin-bottom:16px; }
+  .program-hero p { color:rgba(255,255,255,0.85); font-size:1.05rem; margin-bottom:36px; }
+  .pricing-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; max-width:1000px; margin:0 auto; padding:0 24px 80px; }
+  .pricing-card {
+    background:white; border-radius:20px; padding:32px;
+    border:2px solid var(--border); transition:all var(--transition);
+    position:relative;
+  }
+  .pricing-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+  .pricing-card.popular { border-color:var(--blue); }
+  .popular-badge {
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+    background:var(--blue); color:white; border-radius:20px;
+    padding:4px 16px; font-size:0.78rem; font-weight:700; white-space:nowrap;
+  }
+  .plan-name { font-family:'Sora',sans-serif; font-weight:800; font-size:1rem; margin-bottom:8px; }
+  .plan-price { font-family:'Sora',sans-serif; font-size:2rem; font-weight:900; color:var(--blue); margin:12px 0; }
+  .plan-price span { font-size:0.9rem; font-weight:500; color:var(--text-muted); }
+  .plan-desc { font-size:0.85rem; color:var(--text-muted); margin-bottom:20px; line-height:1.5; }
+  .plan-features { list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+  .plan-features li { font-size:0.88rem; display:flex; align-items:flex-start; gap:8px; }
+  .plan-features li::before { content:'✓'; color:var(--teal); font-weight:800; flex-shrink:0; }
+  .btn-plan {
+    width:100%; padding:14px; border-radius:12px;
+    border:2px solid var(--blue); background:transparent;
+    color:var(--blue); font-family:'Sora',sans-serif; font-weight:700;
+    font-size:0.95rem; cursor:pointer; transition:all var(--transition);
+  }
+  .btn-plan:hover, .pricing-card.popular .btn-plan { background:var(--blue); color:white; }
+
+  /* ── ABOUT & LEARN ── */
+  .static-page { padding-top:68px; }
+  .static-hero { background:linear-gradient(135deg, var(--blue-dark), var(--blue)); color:white; padding:72px 24px; text-align:center; }
+  .static-hero h1 { font-family:'DM Serif Display',serif; font-size:2.5rem; margin-bottom:12px; }
+  .static-hero p { color:rgba(255,255,255,0.8); max-width:560px; margin:0 auto; }
+  .static-content { max-width:800px; margin:0 auto; padding:60px 24px; }
+  .static-content h2 { font-family:'DM Serif Display',serif; font-size:1.8rem; margin:36px 0 16px; }
+  .static-content p { margin-bottom:16px; line-height:1.75; color:var(--text); }
+  .static-content ul { padding-left:20px; margin-bottom:16px; }
+  .static-content li { margin-bottom:8px; line-height:1.6; }
+  .info-card { background:var(--blue-light); border-left:4px solid var(--blue); border-radius:8px; padding:20px; margin:24px 0; }
+  .info-card p { color:var(--text); margin:0; }
+
+  .article-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:40px; }
+  .article-card {
+    background:white; border-radius:16px; overflow:hidden;
+    border:1.5px solid var(--border); transition:all var(--transition);
+    cursor:pointer;
+  }
+  .article-card:hover { transform:translateY(-3px); box-shadow:var(--shadow); }
+  .article-thumb { height:150px; display:flex; align-items:center; justify-content:center; font-size:3rem; }
+  .article-body { padding:20px; }
+  .article-cat { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--blue); margin-bottom:8px; }
+  .article-title { font-weight:700; font-size:0.95rem; margin-bottom:8px; line-height:1.35; }
+  .article-meta { font-size:0.78rem; color:var(--text-muted); }
+
+  /* ── MOBILE MENU ── */
+  .mobile-drawer {
+    position:fixed; inset:0; z-index:999;
+    background:rgba(0,0,0,0.5); opacity:0; pointer-events:none;
+    transition:opacity var(--transition);
+  }
+  .mobile-drawer.open { opacity:1; pointer-events:all; }
+  .mobile-drawer-panel {
+    position:absolute; top:0; right:0; bottom:0; width:280px;
+    background:white; transform:translateX(100%); transition:transform 0.3s ease;
+    padding:80px 24px 32px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .mobile-drawer.open .mobile-drawer-panel { transform:translateX(0); }
+  .mobile-drawer-link {
+    padding:14px 16px; border-radius:10px; font-weight:600;
+    text-decoration:none; color:var(--text);
+    transition:all var(--transition); display:block; cursor:pointer;
+  }
+  .mobile-drawer-link:hover { background:var(--blue-light); color:var(--blue); }
+
+  /* ── TOAST ── */
+  .toast {
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+    background:#111; color:white; padding:12px 24px; border-radius:12px;
+    font-size:0.9rem; font-weight:600; z-index:9999;
+    opacity:0; transition:opacity 0.3s; pointer-events:none;
+  }
+  .toast.show { opacity:1; }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:900px) {
+    .hero-content { grid-template-columns:1fr; gap:32px; }
+    .hero-card { display:none; }
+    .stats-grid { grid-template-columns:repeat(2,1fr); }
+    .steps-grid { grid-template-columns:1fr; }
+    .steps-grid::before { display:none; }
+    .why-grid { grid-template-columns:1fr; }
+    .testi-grid { grid-template-columns:1fr; }
+    .footer-top { grid-template-columns:1fr 1fr; }
+    .pricing-cards { grid-template-columns:1fr; }
+    .article-grid { grid-template-columns:1fr; }
+  }
+  @media(max-width:700px) {
+    .nav-links { display:none; }
+    .hamburger { display:flex; }
+    .hero h1 { font-size:2rem; }
+    .hero-content { padding:48px 24px; }
+    .footer-top { grid-template-columns:1fr; }
+    .upsell-benefits { flex-direction:column; }
+    .result-actions { flex-direction:column; }
+    .bmi-inputs { flex-direction:column; }
+  }
+  @media(max-width:480px) {
+    .stats-grid { grid-template-columns:1fr 1fr; }
+    .trust-badges { flex-direction:column; }
+    .gender-select { flex-direction:column; align-items:center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="nav-logo" href="#" onclick="showPage('home')">
+    <div class="nav-logo-icon">🩺</div>
+    <span>Cek<span class="accent">Diabetes</span>.id</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showPage('home')">Beranda</a></li>
+    <li><a href="#" onclick="showPage('test')">Mulai Tes</a></li>
+    <li><a href="#" onclick="showPage('learn')">Edukasi</a></li>
+    <li><a href="#" onclick="showPage('program')">Program</a></li>
+    <li><a href="#" onclick="showPage('about')">Tentang</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-id" onclick="setLang('id')">ID</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="btn-cta-sm" onclick="showPage('test')">
+      <span data-t="nav_cta">Mulai Tes</span> →
+    </a>
+    <div class="hamburger" onclick="toggleDrawer()" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobileDrawer" onclick="closeDrawer(event)">
+  <div class="mobile-drawer-panel">
+    <a class="mobile-drawer-link" onclick="showPage('home');closeDrawer()" data-t="nav_home">Beranda</a>
+    <a class="mobile-drawer-link" onclick="showPage('test');closeDrawer()" data-t="nav_test">Mulai Tes</a>
+    <a class="mobile-drawer-link" onclick="showPage('learn');closeDrawer()" data-t="nav_learn">Edukasi</a>
+    <a class="mobile-drawer-link" onclick="showPage('program');closeDrawer()" data-t="nav_program">Program</a>
+    <a class="mobile-drawer-link" onclick="showPage('about');closeDrawer()" data-t="nav_about">Tentang</a>
+    <div style="margin-top:16px">
+      <div class="lang-toggle" style="justify-content:center">
+        <button class="lang-btn active" id="btn-id-m" onclick="setLang('id')">ID</button>
+        <button class="lang-btn" id="btn-en-m" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ HOME PAGE ═══════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-shapes">
+      <div class="hero-shape hero-shape-1"></div>
+      <div class="hero-shape hero-shape-2"></div>
+      <div class="hero-shape hero-shape-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-badge">
+          <span></span>
+          <span data-t="hero_badge">Tes FINDRISC Tervalidasi Secara Global</span>
+        </div>
+        <h1 data-t="hero_title">Cek Risiko <em>Diabetes Tipe 2</em> Anda — Gratis & Hanya 3 Menit</h1>
+        <p data-t="hero_sub">Tes ilmiah FINDRISC yang tervalidasi secara global — tidak perlu tes darah, tidak perlu daftar. Ketahui risiko Anda sekarang.</p>
+        <div class="hero-cta-group">
+          <button class="btn-primary" onclick="showPage('test')">
+            <span data-t="hero_cta">🚀 Mulai Tes Sekarang</span>
+          </button>
+          <button class="btn-ghost" onclick="showPage('about')">
+            <span data-t="hero_learn">Tentang FINDRISC</span>
+          </button>
+        </div>
+        <div class="trust-badges">
+          <div class="trust-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span data-t="trust1">Berbasis Sains</span>
+          </div>
+          <div class="trust-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+            <span data-t="trust2">500.000+ Pengguna</span>
+          </div>
+          <div class="trust-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <span data-t="trust3">Gratis Selamanya</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-title" data-t="demo_title">Contoh Hasil Tes</div>
+        <div class="score-preview">
+          <div class="score-ring">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="8"/>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#ef4444" stroke-width="8"
+                stroke-dasharray="184 264" stroke-linecap="round"/>
+            </svg>
+            <div class="score-ring-inner">
+              <div class="score-num">16</div>
+              <div class="score-label">/ 26</div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <div class="risk-level-badge" data-t="demo_risk">Risiko Tinggi</div>
+        </div>
+        <div class="mini-recs">
+          <div class="mini-rec"><div class="mini-rec-icon">🏃</div><span data-t="demo_rec1">Tingkatkan aktivitas fisik ≥30 menit/hari</span></div>
+          <div class="mini-rec"><div class="mini-rec-icon">🥗</div><span data-t="demo_rec2">Konsumsi sayur & buah lebih banyak</span></div>
+          <div class="mini-rec"><div class="mini-rec-icon">🩺</div><span data-t="demo_rec3">Konsultasikan dengan dokter segera</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">537 Juta</div>
+        <div class="stat-label" data-t="stat1">Penderita diabetes di seluruh dunia</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">19,5 Juta</div>
+        <div class="stat-label" data-t="stat2">Penderita di Indonesia (peringkat ke-5 dunia)</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">6 Detik</div>
+        <div class="stat-label" data-t="stat3">Setiap 6 detik, 1 orang meninggal akibat komplikasi diabetes</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">90%</div>
+        <div class="stat-label" data-t="stat4">Kasus Diabetes Tipe 2 dapat dicegah dengan deteksi dini</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="section how-it-works">
+    <div class="section-inner">
+      <div class="section-tag" data-t="how_tag">Cara Kerja</div>
+      <h2 class="section-title" data-t="how_title">Mudah, Cepat, dan Ilmiah</h2>
+      <p class="section-subtitle" data-t="how_sub">Tes FINDRISC dirancang agar siapa saja bisa menggunakannya — tanpa latar belakang medis.</p>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-title" data-t="step1_title">Jawab 8 Pertanyaan Singkat</div>
+          <div class="step-desc" data-t="step1_desc">Tentang gaya hidup, ukuran tubuh, dan riwayat keluarga. Tidak ada tes darah.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-title" data-t="step2_title">Dapatkan Skor Risiko Anda</div>
+          <div class="step-desc" data-t="step2_desc">Algoritma FINDRISC menghitung skor 0–26 secara instan berdasarkan jawaban Anda.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-title" data-t="step3_title">Ambil Tindakan</div>
+          <div class="step-desc" data-t="step3_desc">Terima rekomendasi personal dan opsi program pencegahan yang sesuai.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY FINDRISC -->
+  <section class="section why-findrisc">
+    <div class="section-inner">
+      <div class="why-grid">
+        <div>
+          <div class="section-tag" data-t="why_tag">Mengapa FINDRISC?</div>
+          <h2 class="section-title" data-t="why_title">Tervalidasi di Lebih dari 20 Negara</h2>
+          <p class="section-subtitle" style="margin-bottom:36px" data-t="why_sub">Dikembangkan oleh peneliti Finlandia dan telah divalidasi dalam banyak populasi berbeda di seluruh dunia.</p>
+          <div class="why-features">
+            <div class="why-feature">
+              <div class="why-icon">🔬</div>
+              <div class="why-text"><h4 data-t="wf1_t">Berbasis Riset Ilmiah</h4><p data-t="wf1_d">Dikembangkan oleh Prof. Jaakko Tuomilehto & Adj. Prof. Jaana Lindstrom, NPHI Helsinki.</p></div>
+            </div>
+            <div class="why-feature">
+              <div class="why-icon">⚡</div>
+              <div class="why-text"><h4 data-t="wf2_t">Tanpa Tes Laboratorium</h4><p data-t="wf2_d">Tidak perlu cek darah. Cukup jawab 8 pertanyaan tentang diri Anda.</p></div>
+            </div>
+            <div class="why-feature">
+              <div class="why-icon">🎯</div>
+              <div class="why-text"><h4 data-t="wf3_t">Akurasi 33–50%</h4><p data-t="wf3_d">Mampu mengidentifikasi individu berisiko tinggi dengan probabilitas 33–50% dalam 10 tahun.</p></div>
+            </div>
+            <div class="why-feature">
+              <div class="why-icon">🌏</div>
+              <div class="why-text"><h4 data-t="wf4_t">Digunakan Secara Global</h4><p data-t="wf4_d">Diadopsi oleh otoritas kesehatan di Eropa, Asia, dan Indonesia.</p></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="score-chart">
+            <h4 data-t="chart_title">INTERPRETASI SKOR FINDRISC</h4>
+            <div class="risk-bar-item">
+              <div class="risk-bar-header">
+                <span class="risk-bar-label" style="color:var(--teal)" data-t="r1_label">Rendah (Low)</span>
+                <span class="risk-bar-range">0 – 7 | ~1%</span>
+              </div>
+              <div class="risk-bar-track"><div class="risk-bar-fill" style="width:27%;background:var(--teal)"></div></div>
+            </div>
+            <div class="risk-bar-item">
+              <div class="risk-bar-header">
+                <span class="risk-bar-label" style="color:var(--yellow)" data-t="r2_label">Sedikit Meningkat</span>
+                <span class="risk-bar-range">8 – 11 | ~4%</span>
+              </div>
+              <div class="risk-bar-track"><div class="risk-bar-fill" style="width:42%;background:var(--yellow)"></div></div>
+            </div>
+            <div class="risk-bar-item">
+              <div class="risk-bar-header">
+                <span class="risk-bar-label" style="color:var(--amber)" data-t="r3_label">Sedang (Moderate)</span>
+                <span class="risk-bar-range">12 – 14 | ~17%</span>
+              </div>
+              <div class="risk-bar-track"><div class="risk-bar-fill" style="width:54%;background:var(--amber)"></div></div>
+            </div>
+            <div class="risk-bar-item">
+              <div class="risk-bar-header">
+                <span class="risk-bar-label" style="color:var(--red)" data-t="r4_label">Tinggi (High)</span>
+                <span class="risk-bar-range">15 – 20 | ~33%</span>
+              </div>
+              <div class="risk-bar-track"><div class="risk-bar-fill" style="width:77%;background:var(--red)"></div></div>
+            </div>
+            <div class="risk-bar-item">
+              <div class="risk-bar-header">
+                <span class="risk-bar-label" style="color:#7f0000" data-t="r5_label">Sangat Tinggi (Very High)</span>
+                <span class="risk-bar-range">&gt;20 | ~50%</span>
+              </div>
+              <div class="risk-bar-track"><div class="risk-bar-fill" style="width:100%;background:#7f0000"></div></div>
+            </div>
+            <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--border)">
+              <button class="btn-cta-sm" style="width:100%; justify-content:center; font-size:0.95rem; padding:14px" onclick="showPage('test')">
+                <span data-t="chart_cta">Cek Risiko Anda Sekarang →</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section testimonials">
+    <div class="section-inner">
+      <div class="section-tag" data-t="testi_tag">Testimoni</div>
+      <h2 class="section-title" data-t="testi_title">Dipercaya Ratusan Ribu Pengguna</h2>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:12px;margin-bottom:0">
+        <div style="font-size:1.5rem;color:#f59e0b">★★★★★</div>
+        <span style="font-weight:700;font-size:1rem">4.8/5</span>
+        <span style="color:var(--text-muted);font-size:0.88rem" data-t="testi_from">dari 12.400+ ulasan</span>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <p class="testi-text" data-t="t1_text">"Saya tidak pernah tahu kalau saya berisiko tinggi. Setelah tes ini, saya langsung periksa ke dokter dan ternyata memang ada prediabetes. Terima kasih!"</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#1A56A8">BW</div>
+            <div>
+              <div class="stars">★★★★★</div>
+              <div class="testi-name">Budi Wicaksono</div>
+              <div class="testi-loc">Jakarta, 52 tahun</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <p class="testi-text" data-t="t2_text">"Tesnya cepat banget, 3 menit selesai. Hasilnya sangat informatif dan rekomendasinya jelas. Program dietnya juga membantu saya turun 8 kg!"</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#0E7C5B">SR</div>
+            <div>
+              <div class="stars">★★★★★</div>
+              <div class="testi-name">Sari Rahayu</div>
+              <div class="testi-loc">Surabaya, 45 tahun</div>
+            </div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <p class="testi-text" data-t="t3_text">"Ibu saya punya diabetes, jadi saya selalu khawatir. Website ini membantu saya memantau risiko dan menjaga pola hidup sehat."</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background:#C45A1A">DH</div>
+            <div>
+              <div class="stars">★★★★★</div>
+              <div class="testi-name">Dewi Hartati</div>
+              <div class="testi-loc">Bandung, 38 tahun</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHARE SECTION -->
+  <div class="share-section">
+    <div style="max-width:700px;margin:0 auto">
+      <h2 style="font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:12px" data-t="share_title">Bagikan Tes Ini</h2>
+      <p style="color:rgba(255,255,255,0.8);margin-bottom:8px" data-t="share_sub">Bantu seseorang mengetahui risiko diabetes mereka. Berbagi bisa menyelamatkan nyawa.</p>
+      <div class="share-btns">
+        <a href="#" class="share-btn wa" onclick="shareWA()">💬 WhatsApp</a>
+        <a href="#" class="share-btn" onclick="shareFB()">📘 Facebook</a>
+        <a href="#" class="share-btn" onclick="shareTG()">✈️ Telegram</a>
+        <a href="#" class="share-btn" onclick="copyLink()"><span data-t="share_copy">🔗 Salin Link</span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="footer-logo-icon">🩺</div>
+            <div class="footer-logo-text">CekDiabetes.id</div>
+          </div>
+          <p class="footer-tagline" data-t="footer_tag">Platform tes risiko diabetes FINDRISC terpercaya untuk Indonesia.</p>
+          <div class="footer-disclaimer" data-t="disclaimer">Tes ini bersifat informatif dan bukan diagnosis medis. Selalu konsultasikan dengan tenaga medis profesional.</div>
+        </div>
+        <div class="footer-col">
+          <h4 data-t="foot_links">Tautan Cepat</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="showPage('home')" data-t="nav_home">Beranda</a></li>
+            <li><a href="#" onclick="showPage('test')" data-t="nav_test">Mulai Tes</a></li>
+            <li><a href="#" onclick="showPage('results')" data-t="nav_results">Lihat Hasil</a></li>
+            <li><a href="#" onclick="showPage('program')" data-t="nav_program">Program</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-t="foot_learn">Pelajari Lebih</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="showPage('learn')" data-t="foot_hub">Hub Edukasi</a></li>
+            <li><a href="#" onclick="showPage('about')" data-t="foot_about">Tentang FINDRISC</a></li>
+            <li><a href="#" data-t="foot_faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4 data-t="foot_legal">Legal</h4>
+          <ul class="footer-links">
+            <li><a href="#" data-t="foot_privacy">Kebijakan Privasi</a></li>
+            <li><a href="#" data-t="foot_terms">Syarat Layanan</a></li>
+            <li><a href="#" data-t="foot_contact">Kontak</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2026 CekDiabetes.id — <span data-t="foot_rights">Hak Cipta Dilindungi</span></div>
+        <div class="footer-attribution">The FINDRISC questionnaire was developed by Prof. Jaakko Tuomilehto & Adj. Prof. Jaana Lindstrom, NPHI Helsinki, Finland. © 2001. Lindstrom J, Tuomilehto J. Diabetes Care 2003;26:725–731.</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════ TEST PAGE ═══════════════ -->
+<div class="page" id="page-test">
+  <div class="test-page">
+
+    <!-- Intro Screen -->
+    <div id="test-intro-screen">
+      <div class="test-intro">
+        <div class="test-intro-icon">📋</div>
+        <h1 data-t="test_title">Tes Risiko Diabetes FINDRISC</h1>
+        <p data-t="test_intro_desc">8 pertanyaan singkat tentang gaya hidup dan riwayat kesehatan Anda. Selesai dalam ~3 menit. Tidak perlu daftar.</p>
+        <div class="gender-select" id="gender-select">
+          <div class="gender-btn" id="gender-male" onclick="selectGender('male')">
+            <div class="gender-icon">👨</div>
+            <div class="gender-label" data-t="gender_male">Laki-laki</div>
+          </div>
+          <div class="gender-btn" id="gender-female" onclick="selectGender('female')">
+            <div class="gender-icon">👩</div>
+            <div class="gender-label" data-t="gender_female">Perempuan</div>
+          </div>
+        </div>
+        <button class="btn-primary" id="start-test-btn" style="background:var(--blue);color:white;opacity:0.4;pointer-events:none" onclick="startTest()">
+          <span data-t="test_start">Mulai Tes →</span>
+        </button>
+        <p class="privacy-note" style="margin-top:20px">
+          <span data-t="privacy_note">🔒 Jawaban Anda tidak disimpan kecuali Anda membuat akun.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Question Screen -->
+    <div id="test-question-screen" style="display:none; padding-top:32px">
+      <div class="test-progress-wrap">
+        <div class="test-progress-header">
+          <span class="test-progress-label" id="progress-label">Pertanyaan 1 dari 8</span>
+          <span class="test-progress-steps" id="progress-score">0 poin</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="test-question-wrap">
+        <div class="question-card" id="question-card">
+          <!-- filled by JS -->
+        </div>
+        <div class="test-nav">
+          <button class="btn-back" id="btn-back" onclick="prevQuestion()">← <span data-t="btn_back">Kembali</span></button>
+          <button class="btn-next" id="btn-next" onclick="nextQuestion()" disabled>
+            <span id="btn-next-label" data-t="btn_next">Lanjut</span> →
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ RESULTS PAGE ═══════════════ -->
+<div class="page" id="page-results">
+  <div class="results-page">
+    <div class="results-inner">
+      <div class="result-header">
+        <h1 data-t="result_title">Hasil Tes Anda</h1>
+        <p data-t="result_sub">Berdasarkan jawaban Anda, berikut adalah penilaian risiko diabetes Anda.</p>
+      </div>
+      <div class="score-display" id="score-display">
+        <!-- filled by JS -->
+      </div>
+      <div id="upsell-top"></div>
+      <div class="recs-section" id="recs-section">
+        <h2 data-t="recs_title">Rekomendasi Personal Anda</h2>
+        <div id="recs-list"></div>
+      </div>
+      <div id="upsell-bottom"></div>
+      <div style="background:white;border-radius:20px;padding:32px;box-shadow:var(--shadow);margin-bottom:32px">
+        <h3 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:16px" data-t="share_result">Bagikan Hasil Anda</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px" data-t="share_result_sub">Bantu teman dan keluarga mengetahui risiko mereka.</p>
+        <div class="share-btns" style="justify-content:flex-start">
+          <a href="#" class="share-btn wa" onclick="shareWA()" style="background:rgba(37,211,102,0.1);border-color:#25D366;color:#1a7a3c">💬 WhatsApp</a>
+          <a href="#" class="share-btn" onclick="shareTG()" style="background:var(--blue-light);border-color:var(--blue);color:var(--blue)">✈️ Telegram</a>
+          <a href="#" class="share-btn" onclick="copyLink()" style="background:var(--bg);border-color:var(--border);color:var(--text)">🔗 <span data-t="copy_link">Salin Link</span></a>
+        </div>
+      </div>
+      <div class="result-actions">
+        <button class="btn-outline" onclick="retakeTest()">🔄 <span data-t="retake">Tes Ulang</span></button>
+        <button class="btn-outline" onclick="showPage('program')">📋 <span data-t="view_program">Lihat Program</span></button>
+        <button class="btn-outline" onclick="window.print()">🖨️ <span data-t="print">Cetak</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PROGRAM PAGE ═══════════════ -->
+<div class="page" id="page-program">
+  <div class="static-page">
+    <div class="program-hero">
+      <div class="program-hero-inner">
+        <div class="hero-badge" style="margin:0 auto 24px;width:fit-content">
+          <span></span> <span data-t="prog_badge">Program Pencegahan Diabetes #1 Indonesia</span>
+        </div>
+        <h1 data-t="prog_title">Program Intermittent Fasting & Pencegahan Diabetes</h1>
+        <p data-t="prog_sub">Program berbasis sains yang telah membantu ribuan orang Indonesia menurunkan risiko diabetes dan meraih hidup sehat.</p>
+        <button class="btn-primary" onclick="showToast(lang==='id'?'Segera hadir!':'Coming soon!')">
+          <span data-t="prog_cta">Daftar Sekarang →</span>
+        </button>
+      </div>
+    </div>
+    <div style="background:var(--bg);padding:40px 24px 16px;text-align:center">
+      <div class="section-tag" style="margin:0 auto 16px;width:fit-content" data-t="pricing_tag">Pilih Paket Anda</div>
+      <h2 class="section-title" style="text-align:center" data-t="pricing_title">Harga Terjangkau, Hasil Nyata</h2>
+    </div>
+    <div class="pricing-cards">
+      <div class="pricing-card">
+        <div class="plan-name" data-t="plan1_name">Starter</div>
+        <div class="plan-price">Rp 99.000<span data-t="plan1_freq"> sekali bayar</span></div>
+        <div class="plan-desc" data-t="plan1_desc">Cocok untuk memulai perjalanan hidup sehat Anda.</div>
+        <ul class="plan-features">
+          <li data-t="plan1_f1">Panduan puasa 4 minggu (PDF)</li>
+          <li data-t="plan1_f2">Rencana makan mingguan</li>
+          <li data-t="plan1_f3">Grup WhatsApp support</li>
+          <li data-t="plan1_f4">Akses seumur hidup</li>
+        </ul>
+        <button class="btn-plan" onclick="showToast(lang==='id'?'Segera hadir!':'Coming soon!')">
+          <span data-t="plan_choose">Pilih Paket Ini</span>
+        </button>
+      </div>
+      <div class="pricing-card popular">
+        <div class="popular-badge" data-t="most_popular">Paling Populer</div>
+        <div class="plan-name" data-t="plan2_name">Essentials</div>
+        <div class="plan-price">Rp 249.000<span>/bln</span></div>
+        <div class="plan-desc" data-t="plan2_desc">Program lengkap dengan video & komunitas aktif.</div>
+        <ul class="plan-features">
+          <li data-t="plan2_f1">Semua fitur Starter</li>
+          <li data-t="plan2_f2">Video pelajaran mingguan</li>
+          <li data-t="plan2_f3">Check-in mingguan dengan coach</li>
+          <li data-t="plan2_f4">Forum komunitas eksklusif</li>
+          <li data-t="plan2_f5">Tracking progress online</li>
+        </ul>
+        <button class="btn-plan" onclick="showToast(lang==='id'?'Segera hadir!':'Coming soon!')">
+          <span data-t="plan_choose">Pilih Paket Ini</span>
+        </button>
+      </div>
+      <div class="pricing-card">
+        <div class="plan-name" data-t="plan3_name">Premium</div>
+        <div class="plan-price">Rp 599.000<span>/bln</span></div>
+        <div class="plan-desc" data-t="plan3_desc">Pendampingan penuh dengan coach personal.</div>
+        <ul class="plan-features">
+          <li data-t="plan3_f1">Semua fitur Essentials</li>
+          <li data-t="plan3_f2">1:1 call coach/bulan</li>
+          <li data-t="plan3_f3">Rencana makan personal</li>
+          <li data-t="plan3_f4">Prioritas dukungan 24 jam</li>
+          <li data-t="plan3_f5">Konsultasi ahli gizi</li>
+        </ul>
+        <button class="btn-plan" onclick="showToast(lang==='id'?'Segera hadir!':'Coming soon!')">
+          <span data-t="plan_choose">Pilih Paket Ini</span>
+        </button>
+      </div>
+    </div>
+    <div style="text-align:center;padding:0 24px 48px;color:var(--text-muted);font-size:0.85rem" data-t="prog_note">
+      Tes FINDRISC selalu gratis dan tidak memerlukan pendaftaran. Program pencegahan adalah pilihan opsional.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ABOUT PAGE ═══════════════ -->
+<div class="page" id="page-about">
+  <div class="static-page">
+    <div class="static-hero">
+      <h1 data-t="about_title">Tentang FINDRISC</h1>
+      <p data-t="about_sub">Memahami ilmu di balik tes risiko diabetes yang paling banyak digunakan di dunia.</p>
+    </div>
+    <div class="static-content">
+      <div class="info-card"><p data-t="about_attr"><strong>Atribusi:</strong> The FINDRISC questionnaire was developed by Prof. Jaakko Tuomilehto and Adj. Prof. Jaana Lindstrom, National Public Health Institute, Helsinki, Finland. © 2001. Lindstrom J, Tuomilehto J. Diabetes Care 2003;26:725–731.</p></div>
+      <h2 data-t="about_h1">Apa itu FINDRISC?</h2>
+      <p data-t="about_p1">FINDRISC (Finnish Diabetes Risk Score) adalah kuesioner skrining risiko diabetes yang dikembangkan di Finlandia pada tahun 2001. Alat ini dirancang untuk mengidentifikasi individu yang berisiko tinggi mengembangkan Diabetes Tipe 2 dalam 10 tahun ke depan, tanpa memerlukan tes laboratorium.</p>
+      <p data-t="about_p2">Kuesioner terdiri dari 8 pertanyaan sederhana yang mencakup usia, indeks massa tubuh (BMI), lingkar pinggang, aktivitas fisik, pola makan, riwayat tekanan darah tinggi, riwayat kadar gula darah tinggi, dan riwayat keluarga dengan diabetes.</p>
+      <h2 data-t="about_h2">Validasi Ilmiah</h2>
+      <p data-t="about_p3">FINDRISC telah divalidasi di lebih dari 20 negara termasuk Finlandia, Jerman, Italia, Portugal, Turki, dan banyak negara Asia. Penelitian telah menunjukkan bahwa skor FINDRISC berkorelasi kuat dengan risiko diabetes aktual yang terdiagnosis melalui tes laboratorium.</p>
+      <p data-t="about_p4">Dengan sensitivitas sekitar 78% dan spesifisitas 77%, FINDRISC adalah salah satu alat skrining non-invasif yang paling efektif untuk deteksi dini risiko Diabetes Tipe 2.</p>
+      <h2 data-t="about_h3">Cara Penggunaan yang Benar</h2>
+      <p data-t="about_p5">FINDRISC adalah alat skrining, bukan alat diagnostik. Hasil tes ini menunjukkan tingkat risiko statistik dalam suatu populasi, bukan diagnosis individu. Jika Anda mendapatkan skor tinggi, sangat disarankan untuk berkonsultasi dengan dokter atau tenaga medis profesional untuk evaluasi lebih lanjut.</p>
+      <h2 data-t="about_h4">Batasan Tes</h2>
+      <ul>
+        <li data-t="about_li1">Tidak dapat mendiagnosis diabetes — hanya menunjukkan tingkat risiko.</li>
+        <li data-t="about_li2">Tidak berlaku untuk Diabetes Tipe 1 (yang merupakan penyakit autoimun).</li>
+        <li data-t="about_li3">Hasil terbaik diperoleh dengan jawaban yang jujur dan pengukuran yang akurat.</li>
+        <li data-t="about_li4">Selalu konsultasikan dengan dokter untuk evaluasi komprehensif.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ LEARN PAGE ═══════════════ -->
+<div class="page" id="page-learn">
+  <div class="static-page">
+    <div class="static-hero">
+      <h1 data-t="learn_title">Hub Edukasi Diabetes</h1>
+      <p data-t="learn_sub">Artikel berbasis sains tentang pencegahan diabetes, nutrisi, dan gaya hidup sehat.</p>
+    </div>
+    <div style="max-width:1120px;margin:0 auto;padding:48px 24px 80px">
+      <div class="article-grid">
+        <div class="article-card" onclick="showToast(lang==='id'?'Artikel segera hadir!':'Article coming soon!')">
+          <div class="article-thumb" style="background:#e8f0fb">🥗</div>
+          <div class="article-body">
+            <div class="article-cat" data-t="cat_nutrition">Nutrisi</div>
+            <div class="article-title" data-t="art1_title">10 Makanan Terbaik untuk Mencegah Diabetes Tipe 2</div>
+            <div class="article-meta" data-t="art1_meta">5 menit membaca · dr. Anita Susanti</div>
+          </div>
+        </div>
+        <div class="article-card" onclick="showToast(lang==='id'?'Artikel segera hadir!':'Article coming soon!')">
+          <div class="article-thumb" style="background:#e6f5f0">🏃</div>
+          <div class="article-body">
+            <div class="article-cat" data-t="cat_exercise">Olahraga</div>
+            <div class="article-title" data-t="art2_title">Panduan Olahraga untuk Penderita Prediabetes</div>
+            <div class="article-meta" data-t="art2_meta">7 menit membaca · dr. Budi Santoso</div>
+          </div>
+        </div>
+        <div class="article-card" onclick="showToast(lang==='id'?'Artikel segera hadir!':'Article coming soon!')">
+          <div class="article-thumb" style="background:#fdf0e8">⏱️</div>
+          <div class="article-body">
+            <div class="article-cat" data-t="cat_if">Intermittent Fasting</div>
+            <div class="article-title" data-t="art3_title">Intermittent Fasting dan Diabetes: Apa yang Dikatakan Sains?</div>
+            <div class="article-meta" data-t="art3_meta">8 menit membaca · Prof. Dra. Maya Lestari</div>
+          </div>
+        </div>
+        <div class="article-card" onclick="showToast(lang==='id'?'Artikel segera hadir!':'Article coming soon!')">
+          <div class="article-thumb" style="background:#fce8e8">🩸</div>
+          <div class="article-body">
+            <div class="article-cat" data-t="cat_basics">Dasar-Dasar Diabetes</div>
+            <div class="article-title" data-t="art4_title">Apa Perbedaan Diabetes Tipe 1 dan Tipe 2?</div>
+            <div class="article-meta" data-t="art4_meta">4 menit membaca · dr. Rahma Putri</div>
+          </div>
+        </div>
+        <div class="article-card" onclick="showToast(lang==='id'?'Artikel segera hadir!':'Article coming soon!')">
+          <div class="article-thumb" style="background:#fef9e7">🌙</div>
+          <div class="article-body">
+            <div class="article-cat" data-t="cat_lifestyle">Gaya Hidup</div>
+            <div class="article-title" data-t="art5_title">Tidur Cukup untuk Mencegah Diabetes: Fakta yang Mengejutkan</div>
+            <div class="article-meta" data-t="art5_meta">6 menit membaca · dr. Ahmad Fauzi</div>
+          </div>
+        </div>
+        <div class="article-card" onclick="showToast(lang==='id'?'Artikel segera hadir!':'Article coming soon!')">
+          <div class="article-thumb" style="background:#e8f0fb">📊</div>
+          <div class="article-body">
+            <div class="article-cat" data-t="cat_monitor">Pemantauan</div>
+            <div class="article-title" data-t="art6_title">Cara Memantau Kadar Gula Darah di Rumah</div>
+            <div class="article-meta" data-t="art6_meta">5 menit membaca · dr. Siti Nurhaliza</div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:40px">
+        <button class="btn-cta-sm" style="font-size:0.95rem;padding:14px 28px" onclick="showToast(lang==='id'?'Lebih banyak artikel segera hadir!':'More articles coming soon!')">
+          <span data-t="load_more">Muat Lebih Banyak Artikel →</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loading-screen" style="display:none">
+  <div class="spinner"></div>
+  <h2 data-t="calc_title">Menghitung skor Anda...</h2>
+  <p data-t="calc_sub">Menganalisis jawaban dengan algoritma FINDRISC</p>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ────────── TRANSLATION STRINGS ──────────
+const T = {
+  id: {
+    nav_home:'Beranda', nav_test:'Mulai Tes', nav_cta:'Mulai Tes', nav_results:'Hasil',
+    nav_learn:'Edukasi', nav_program:'Program', nav_about:'Tentang',
+    hero_badge:'Tes FINDRISC Tervalidasi Secara Global',
+    hero_title:'Cek Risiko <em>Diabetes Tipe 2</em> Anda — Gratis & Hanya 3 Menit',
+    hero_sub:'Tes ilmiah FINDRISC yang tervalidasi secara global — tidak perlu tes darah, tidak perlu daftar. Ketahui risiko Anda sekarang.',
+    hero_cta:'🚀 Mulai Tes Sekarang', hero_learn:'Tentang FINDRISC',
+    trust1:'Berbasis Sains', trust2:'500.000+ Pengguna', trust3:'Gratis Selamanya',
+    demo_title:'Contoh Hasil Tes', demo_risk:'Risiko Tinggi',
+    demo_rec1:'Tingkatkan aktivitas fisik ≥30 menit/hari',
+    demo_rec2:'Konsumsi sayur & buah lebih banyak',
+    demo_rec3:'Konsultasikan dengan dokter segera',
+    stat1:'Penderita diabetes di seluruh dunia',
+    stat2:'Penderita di Indonesia (peringkat ke-5 dunia)',
+    stat3:'Setiap 6 detik, 1 orang meninggal akibat komplikasi diabetes',
+    stat4:'Kasus Diabetes Tipe 2 dapat dicegah dengan deteksi dini',
+    how_tag:'Cara Kerja', how_title:'Mudah, Cepat, dan Ilmiah',
+    how_sub:'Tes FINDRISC dirancang agar siapa saja bisa menggunakannya — tanpa latar belakang medis.',
+    step1_title:'Jawab 8 Pertanyaan Singkat', step1_desc:'Tentang gaya hidup, ukuran tubuh, dan riwayat keluarga. Tidak ada tes darah.',
+    step2_title:'Dapatkan Skor Risiko Anda', step2_desc:'Algoritma FINDRISC menghitung skor 0–26 secara instan berdasarkan jawaban Anda.',
+    step3_title:'Ambil Tindakan', step3_desc:'Terima rekomendasi personal dan opsi program pencegahan yang sesuai.',
+    why_tag:'Mengapa FINDRISC?', why_title:'Tervalidasi di Lebih dari 20 Negara',
+    why_sub:'Dikembangkan oleh peneliti Finlandia dan telah divalidasi dalam banyak populasi berbeda di seluruh dunia.',
+    wf1_t:'Berbasis Riset Ilmiah', wf1_d:'Dikembangkan oleh Prof. Jaakko Tuomilehto & Adj. Prof. Jaana Lindstrom, NPHI Helsinki.',
+    wf2_t:'Tanpa Tes Laboratorium', wf2_d:'Tidak perlu cek darah. Cukup jawab 8 pertanyaan tentang diri Anda.',
+    wf3_t:'Akurasi 33–50%', wf3_d:'Mampu mengidentifikasi individu berisiko tinggi dengan probabilitas 33–50% dalam 10 tahun.',
+    wf4_t:'Digunakan Secara Global', wf4_d:'Diadopsi oleh otoritas kesehatan di Eropa, Asia, dan Indonesia.',
+    chart_title:'INTERPRETASI SKOR FINDRISC',
+    r1_label:'Rendah (Low)', r2_label:'Sedikit Meningkat', r3_label:'Sedang (Moderate)',
+    r4_label:'Tinggi (High)', r5_label:'Sangat Tinggi (Very High)',
+    chart_cta:'Cek Risiko Anda Sekarang →',
+    testi_tag:'Testimoni', testi_title:'Dipercaya Ratusan Ribu Pengguna',
+    testi_from:'dari 12.400+ ulasan',
+    t1_text:'"Saya tidak pernah tahu kalau saya berisiko tinggi. Setelah tes ini, saya langsung periksa ke dokter dan ternyata memang ada prediabetes. Terima kasih!"',
+    t2_text:'"Tesnya cepat banget, 3 menit selesai. Hasilnya sangat informatif dan rekomendasinya jelas. Program dietnya juga membantu saya turun 8 kg!"',
+    t3_text:'"Ibu saya punya diabetes, jadi saya selalu khawatir. Website ini membantu saya memantau risiko dan menjaga pola hidup sehat."',
+    share_title:'Bagikan Tes Ini', share_sub:'Bantu seseorang mengetahui risiko diabetes mereka. Berbagi bisa menyelamatkan nyawa.',
+    share_copy:'Salin Link',
+    footer_tag:'Platform tes risiko diabetes FINDRISC terpercaya untuk Indonesia.',
+    disclaimer:'Tes ini bersifat informatif dan bukan diagnosis medis. Selalu konsultasikan dengan tenaga medis profesional.',
+    foot_links:'Tautan Cepat', foot_learn:'Pelajari Lebih', foot_legal:'Legal',
+    foot_hub:'Hub Edukasi', foot_about:'Tentang FINDRISC', foot_faq:'FAQ',
+    foot_privacy:'Kebijakan Privasi', foot_terms:'Syarat Layanan', foot_contact:'Kontak',
+    foot_rights:'Hak Cipta Dilindungi',
+    test_title:'Tes Risiko Diabetes FINDRISC',
+    test_intro_desc:'8 pertanyaan singkat tentang gaya hidup dan riwayat kesehatan Anda. Selesai dalam ~3 menit. Tidak perlu daftar.',
+    gender_male:'Laki-laki', gender_female:'Perempuan',
+    test_start:'Mulai Tes →',
+    privacy_note:'🔒 Jawaban Anda tidak disimpan kecuali Anda membuat akun.',
+    btn_back:'Kembali', btn_next:'Lanjut',
+    result_title:'Hasil Tes Anda', result_sub:'Berdasarkan jawaban Anda, berikut adalah penilaian risiko diabetes Anda.',
+    recs_title:'Rekomendasi Personal Anda',
+    share_result:'Bagikan Hasil Anda', share_result_sub:'Bantu teman dan keluarga mengetahui risiko mereka.',
+    copy_link:'Salin Link', retake:'Tes Ulang', view_program:'Lihat Program', print:'Cetak',
+    calc_title:'Menghitung skor Anda...', calc_sub:'Menganalisis jawaban dengan algoritma FINDRISC',
+    prog_badge:'Program Pencegahan Diabetes #1 Indonesia',
+    prog_title:'Program Intermittent Fasting & Pencegahan Diabetes',
+    prog_sub:'Program berbasis sains yang telah membantu ribuan orang Indonesia menurunkan risiko diabetes dan meraih hidup sehat.',
+    prog_cta:'Daftar Sekarang →', pricing_tag:'Pilih Paket Anda', pricing_title:'Harga Terjangkau, Hasil Nyata',
+    plan1_name:'Starter', plan1_freq:' sekali bayar', plan1_desc:'Cocok untuk memulai perjalanan hidup sehat Anda.',
+    plan1_f1:'Panduan puasa 4 minggu (PDF)', plan1_f2:'Rencana makan mingguan',
+    plan1_f3:'Grup WhatsApp support', plan1_f4:'Akses seumur hidup',
+    plan2_name:'Essentials', plan2_desc:'Program lengkap dengan video & komunitas aktif.',
+    plan2_f1:'Semua fitur Starter', plan2_f2:'Video pelajaran mingguan',
+    plan2_f3:'Check-in mingguan dengan coach', plan2_f4:'Forum komunitas eksklusif', plan2_f5:'Tracking progress online',
+    plan3_name:'Premium', plan3_desc:'Pendampingan penuh dengan coach personal.',
+    plan3_f1:'Semua fitur Essentials', plan3_f2:'1:1 call coach/bulan',
+    plan3_f3:'Rencana makan personal', plan3_f4:'Prioritas dukungan 24 jam', plan3_f5:'Konsultasi ahli gizi',
+    most_popular:'Paling Populer', plan_choose:'Pilih Paket Ini',
+    prog_note:'Tes FINDRISC selalu gratis dan tidak memerlukan pendaftaran. Program pencegahan adalah pilihan opsional.',
+    about_title:'Tentang FINDRISC', about_sub:'Memahami ilmu di balik tes risiko diabetes yang paling banyak digunakan di dunia.',
+    about_attr:'<strong>Atribusi:</strong> The FINDRISC questionnaire was developed by Prof. Jaakko Tuomilehto and Adj. Prof. Jaana Lindstrom, National Public Health Institute, Helsinki, Finland. © 2001. Lindstrom J, Tuomilehto J. Diabetes Care 2003;26:725–731.',
+    about_h1:'Apa itu FINDRISC?',
+    about_p1:'FINDRISC (Finnish Diabetes Risk Score) adalah kuesioner skrining risiko diabetes yang dikembangkan di Finlandia pada tahun 2001. Alat ini dirancang untuk mengidentifikasi individu yang berisiko tinggi mengembangkan Diabetes Tipe 2 dalam 10 tahun ke depan, tanpa memerlukan tes laboratorium.',
+    about_p2:'Kuesioner terdiri dari 8 pertanyaan sederhana yang mencakup usia, indeks massa tubuh (BMI), lingkar pinggang, aktivitas fisik, pola makan, riwayat tekanan darah tinggi, riwayat kadar gula darah tinggi, dan riwayat keluarga dengan diabetes.',
+    about_h2:'Validasi Ilmiah',
+    about_p3:'FINDRISC telah divalidasi di lebih dari 20 negara termasuk Finlandia, Jerman, Italia, Portugal, Turki, dan banyak negara Asia. Penelitian telah menunjukkan bahwa skor FINDRISC berkorelasi kuat dengan risiko diabetes aktual yang terdiagnosis melalui tes laboratorium.',
+    about_p4:'Dengan sensitivitas sekitar 78% dan spesifisitas 77%, FINDRISC adalah salah satu alat skrining non-invasif yang paling efektif untuk deteksi dini risiko Diabetes Tipe 2.',
+    about_h3:'Cara Penggunaan yang Benar',
+    about_p5:'FINDRISC adalah alat skrining, bukan alat diagnostik. Hasil tes ini menunjukkan tingkat risiko statistik dalam suatu populasi, bukan diagnosis individu. Jika Anda mendapatkan skor tinggi, sangat disarankan untuk berkonsultasi dengan dokter atau tenaga medis profesional untuk evaluasi lebih lanjut.',
+    about_h4:'Batasan Tes',
+    about_li1:'Tidak dapat mendiagnosis diabetes — hanya menunjukkan tingkat risiko.',
+    about_li2:'Tidak berlaku untuk Diabetes Tipe 1 (yang merupakan penyakit autoimun).',
+    about_li3:'Hasil terbaik diperoleh dengan jawaban yang jujur dan pengukuran yang akurat.',
+    about_li4:'Selalu konsultasikan dengan dokter untuk evaluasi komprehensif.',
+    learn_title:'Hub Edukasi Diabetes', learn_sub:'Artikel berbasis sains tentang pencegahan diabetes, nutrisi, dan gaya hidup sehat.',
+    cat_nutrition:'Nutrisi', cat_exercise:'Olahraga', cat_if:'Intermittent Fasting',
+    cat_basics:'Dasar-Dasar Diabetes', cat_lifestyle:'Gaya Hidup', cat_monitor:'Pemantauan',
+    art1_title:'10 Makanan Terbaik untuk Mencegah Diabetes Tipe 2', art1_meta:'5 menit membaca · dr. Anita Susanti',
+    art2_title:'Panduan Olahraga untuk Penderita Prediabetes', art2_meta:'7 menit membaca · dr. Budi Santoso',
+    art3_title:'Intermittent Fasting dan Diabetes: Apa yang Dikatakan Sains?', art3_meta:'8 menit membaca · Prof. Dra. Maya Lestari',
+    art4_title:'Apa Perbedaan Diabetes Tipe 1 dan Tipe 2?', art4_meta:'4 menit membaca · dr. Rahma Putri',
+    art5_title:'Tidur Cukup untuk Mencegah Diabetes: Fakta yang Mengejutkan', art5_meta:'6 menit membaca · dr. Ahmad Fauzi',
+    art6_title:'Cara Memantau Kadar Gula Darah di Rumah', art6_meta:'5 menit membaca · dr. Siti Nurhaliza',
+    load_more:'Muat Lebih Banyak Artikel →',
+  },
+  en: {
+    nav_home:'Home', nav_test:'Take Test', nav_cta:'Take Test', nav_results:'Results',
+    nav_learn:'Learn', nav_program:'Program', nav_about:'About',
+    hero_badge:'Globally Validated FINDRISC Test',
+    hero_title:'Check Your <em>Type 2 Diabetes</em> Risk — Free & Takes Only 3 Minutes',
+    hero_sub:'The globally validated FINDRISC scientific test — no blood test, no registration required. Know your risk now.',
+    hero_cta:'🚀 Start The Test Now', hero_learn:'About FINDRISC',
+    trust1:'Science-Based', trust2:'500,000+ Users', trust3:'Always Free',
+    demo_title:'Sample Test Result', demo_risk:'High Risk',
+    demo_rec1:'Increase physical activity ≥30 min/day',
+    demo_rec2:'Eat more vegetables & fruits',
+    demo_rec3:'Consult a doctor soon',
+    stat1:'People with diabetes worldwide',
+    stat2:'Cases in Indonesia (5th highest globally)',
+    stat3:'Every 6 seconds, 1 person dies from diabetes complications',
+    stat4:'Type 2 Diabetes cases preventable with early detection',
+    how_tag:'How It Works', how_title:'Easy, Fast, and Scientific',
+    how_sub:'The FINDRISC test is designed for anyone to use — no medical background needed.',
+    step1_title:'Answer 8 Short Questions', step1_desc:'About your lifestyle, body measurements, and family history. No blood test needed.',
+    step2_title:'Get Your Risk Score', step2_desc:'The FINDRISC algorithm instantly calculates your score from 0–26 based on your answers.',
+    step3_title:'Take Action', step3_desc:'Receive personalized recommendations and optional prevention program options.',
+    why_tag:'Why FINDRISC?', why_title:'Validated in 20+ Countries',
+    why_sub:'Developed by Finnish researchers and validated across many different populations worldwide.',
+    wf1_t:'Science-Based Research', wf1_d:'Developed by Prof. Jaakko Tuomilehto & Adj. Prof. Jaana Lindstrom, NPHI Helsinki.',
+    wf2_t:'No Lab Testing Required', wf2_d:'No blood draw needed. Just answer 8 simple questions about yourself.',
+    wf3_t:'33–50% Accuracy', wf3_d:'Identifies high-risk individuals with 33–50% probability of developing diabetes in 10 years.',
+    wf4_t:'Used Globally', wf4_d:'Adopted by health authorities in Europe, Asia, and Indonesia.',
+    chart_title:'FINDRISC SCORE INTERPRETATION',
+    r1_label:'Low', r2_label:'Slightly Elevated', r3_label:'Moderate',
+    r4_label:'High', r5_label:'Very High',
+    chart_cta:'Check Your Risk Now →',
+    testi_tag:'Testimonials', testi_title:'Trusted by Hundreds of Thousands',
+    testi_from:'from 12,400+ reviews',
+    t1_text:'"I never knew I was at high risk. After this test, I went to the doctor right away and they confirmed prediabetes. Thank you!"',
+    t2_text:'"The test was super quick — done in 3 minutes. Very informative results with clear recommendations. The diet program also helped me lose 8 kg!"',
+    t3_text:'"My mother has diabetes, so I\'ve always been worried. This website helps me monitor my risk and maintain a healthy lifestyle."',
+    share_title:'Share This Test', share_sub:'Help someone know their diabetes risk. Sharing could save a life.',
+    share_copy:'Copy Link',
+    footer_tag:'Trusted FINDRISC diabetes risk testing platform for Indonesia.',
+    disclaimer:'This test is informational only and not a medical diagnosis. Always consult a licensed medical professional.',
+    foot_links:'Quick Links', foot_learn:'Learn More', foot_legal:'Legal',
+    foot_hub:'Education Hub', foot_about:'About FINDRISC', foot_faq:'FAQ',
+    foot_privacy:'Privacy Policy', foot_terms:'Terms of Service', foot_contact:'Contact',
+    foot_rights:'All Rights Reserved',
+    test_title:'FINDRISC Diabetes Risk Test',
+    test_intro_desc:'8 short questions about your lifestyle and health history. Done in ~3 minutes. No registration required.',
+    gender_male:'Male', gender_female:'Female',
+    test_start:'Begin Test →',
+    privacy_note:'🔒 Your answers are not saved unless you create an account.',
+    btn_back:'Back', btn_next:'Next',
+    result_title:'Your Test Results', result_sub:'Based on your answers, here is your diabetes risk assessment.',
+    recs_title:'Your Personal Recommendations',
+    share_result:'Share Your Result', share_result_sub:'Help friends and family know their risk.',
+    copy_link:'Copy Link', retake:'Retake Test', view_program:'View Program', print:'Print',
+    calc_title:'Calculating your score...', calc_sub:'Analyzing your answers with the FINDRISC algorithm',
+    prog_badge:'Indonesia\'s #1 Diabetes Prevention Program',
+    prog_title:'Intermittent Fasting & Diabetes Prevention Program',
+    prog_sub:'A science-based program that has helped thousands of Indonesians reduce diabetes risk and achieve a healthy life.',
+    prog_cta:'Enroll Now →', pricing_tag:'Choose Your Plan', pricing_title:'Affordable Price, Real Results',
+    plan1_name:'Starter', plan1_freq:' one-time', plan1_desc:'Perfect for starting your healthy lifestyle journey.',
+    plan1_f1:'4-week fasting guide (PDF)', plan1_f2:'Weekly meal plan',
+    plan1_f3:'WhatsApp support group', plan1_f4:'Lifetime access',
+    plan2_name:'Essentials', plan2_desc:'Full program with videos & an active community.',
+    plan2_f1:'All Starter features', plan2_f2:'Weekly video lessons',
+    plan2_f3:'Weekly coach check-ins', plan2_f4:'Exclusive community forum', plan2_f5:'Online progress tracking',
+    plan3_name:'Premium', plan3_desc:'Full accompaniment with a personal coach.',
+    plan3_f1:'All Essentials features', plan3_f2:'1:1 coach call/month',
+    plan3_f3:'Custom meal plan', plan3_f4:'Priority 24-hour support', plan3_f5:'Nutritionist consultation',
+    most_popular:'Most Popular', plan_choose:'Choose This Plan',
+    prog_note:'The FINDRISC test is always free and requires no registration. The prevention program is optional.',
+    about_title:'About FINDRISC', about_sub:'Understanding the science behind the world\'s most widely used diabetes risk test.',
+    about_attr:'<strong>Attribution:</strong> The FINDRISC questionnaire was developed by Prof. Jaakko Tuomilehto and Adj. Prof. Jaana Lindstrom, National Public Health Institute, Helsinki, Finland. © 2001. Lindstrom J, Tuomilehto J. Diabetes Care 2003;26:725–731.',
+    about_h1:'What is FINDRISC?',
+    about_p1:'FINDRISC (Finnish Diabetes Risk Score) is a diabetes risk screening questionnaire developed in Finland in 2001. It is designed to identify individuals at high risk of developing Type 2 Diabetes within the next 10 years, without requiring laboratory tests.',
+    about_p2:'The questionnaire consists of 8 simple questions covering age, body mass index (BMI), waist circumference, physical activity, diet, history of high blood pressure, history of high blood glucose, and family history of diabetes.',
+    about_h2:'Scientific Validation',
+    about_p3:'FINDRISC has been validated in over 20 countries including Finland, Germany, Italy, Portugal, Turkey, and many Asian countries. Research has shown that the FINDRISC score correlates strongly with actual diabetes risk as diagnosed through laboratory tests.',
+    about_p4:'With a sensitivity of around 78% and specificity of 77%, FINDRISC is one of the most effective non-invasive screening tools for early detection of Type 2 Diabetes risk.',
+    about_h3:'Proper Use',
+    about_p5:'FINDRISC is a screening tool, not a diagnostic tool. The test results indicate statistical risk levels in a population, not individual diagnosis. If you receive a high score, it is strongly recommended to consult a doctor or healthcare professional for further evaluation.',
+    about_h4:'Test Limitations',
+    about_li1:'Cannot diagnose diabetes — only indicates risk level.',
+    about_li2:'Does not apply to Type 1 Diabetes (which is an autoimmune disease).',
+    about_li3:'Best results are obtained with honest answers and accurate measurements.',
+    about_li4:'Always consult a doctor for a comprehensive evaluation.',
+    learn_title:'Diabetes Education Hub', learn_sub:'Science-based articles on diabetes prevention, nutrition, and healthy living.',
+    cat_nutrition:'Nutrition', cat_exercise:'Exercise', cat_if:'Intermittent Fasting',
+    cat_basics:'Diabetes Basics', cat_lifestyle:'Lifestyle', cat_monitor:'Monitoring',
+    art1_title:'10 Best Foods to Prevent Type 2 Diabetes', art1_meta:'5 min read · dr. Anita Susanti',
+    art2_title:'Exercise Guide for People with Prediabetes', art2_meta:'7 min read · dr. Budi Santoso',
+    art3_title:'Intermittent Fasting and Diabetes: What Does Science Say?', art3_meta:'8 min read · Prof. Maya Lestari',
+    art4_title:'What is the Difference Between Type 1 and Type 2 Diabetes?', art4_meta:'4 min read · dr. Rahma Putri',
+    art5_title:'Getting Enough Sleep to Prevent Diabetes: Surprising Facts', art5_meta:'6 min read · dr. Ahmad Fauzi',
+    art6_title:'How to Monitor Blood Glucose Levels at Home', art6_meta:'5 min read · dr. Siti Nurhaliza',
+    load_more:'Load More Articles →',
+  }
+};
+
+// ────────── QUESTIONS DATA ──────────
+const questions = [
+  {
+    id:1, key:'age',
+    q:{ id:'Berapa usia Anda?', en:'How old are you?' },
+    hint:{ id:'Usia memengaruhi risiko diabetes', en:'Age affects diabetes risk' },
+    options:[
+      { id:'Kurang dari 45 tahun', en:'Under 45 years', pts:0 },
+      { id:'45 – 54 tahun', en:'45 – 54 years', pts:2 },
+      { id:'55 – 64 tahun', en:'55 – 64 years', pts:3 },
+      { id:'65 tahun ke atas', en:'65 years or older', pts:4 },
+    ]
+  },
+  {
+    id:2, key:'bmi',
+    q:{ id:'Berapa Indeks Massa Tubuh (BMI) Anda?', en:'What is your Body Mass Index (BMI)?' },
+    hint:{ id:'Gunakan kalkulator di bawah jika tidak tahu BMI Anda', en:'Use the calculator below if you don\'t know your BMI' },
+    hasBmiCalc: true,
+    options:[
+      { id:'Kurang dari 25 kg/m²', en:'Under 25 kg/m²', pts:0, bmiMax:25 },
+      { id:'25 – 30 kg/m²', en:'25 – 30 kg/m²', pts:1, bmiMin:25, bmiMax:30 },
+      { id:'Lebih dari 30 kg/m²', en:'Over 30 kg/m²', pts:3, bmiMin:30 },
+    ]
+  },
+  {
+    id:3, key:'waist',
+    q:{ id:'Berapa lingkar pinggang Anda?', en:'What is your waist circumference?' },
+    hint:{ id:'Ukur pinggang Anda pada titik tersempit, biasanya tepat di atas pusar', en:'Measure at the narrowest point, usually just above the navel' },
+    hasWaistGuide:true,
+    optionsByGender:{
+      male:[
+        { id:'Kurang dari 94 cm', en:'Under 94 cm', pts:0 },
+        { id:'94 – 102 cm', en:'94 – 102 cm', pts:3 },
+        { id:'Lebih dari 102 cm', en:'Over 102 cm', pts:4 },
+      ],
+      female:[
+        { id:'Kurang dari 80 cm', en:'Under 80 cm', pts:0 },
+        { id:'80 – 88 cm', en:'80 – 88 cm', pts:3 },
+        { id:'Lebih dari 88 cm', en:'Over 88 cm', pts:4 },
+      ]
+    }
+  },
+  {
+    id:4, key:'activity',
+    q:{ id:'Apakah Anda berolahraga setidaknya 30 menit setiap hari?', en:'Do you exercise at least 30 minutes every day?' },
+    hint:{ id:'Termasuk berjalan kaki, bersepeda, dll.', en:'Including walking, cycling, etc.' },
+    options:[
+      { id:'Ya, setiap hari atau hampir setiap hari', en:'Yes, every day or almost every day', pts:0 },
+      { id:'Tidak', en:'No', pts:2 },
+    ]
+  },
+  {
+    id:5, key:'diet',
+    q:{ id:'Seberapa sering Anda mengonsumsi sayur-sayuran atau buah-buahan?', en:'How often do you eat vegetables or fruits?' },
+    hint:{ id:'Pola makan sehat mengurangi risiko diabetes', en:'A healthy diet reduces diabetes risk' },
+    options:[
+      { id:'Setiap hari', en:'Every day', pts:0 },
+      { id:'Tidak setiap hari', en:'Not every day', pts:1 },
+    ]
+  },
+  {
+    id:6, key:'bp_meds',
+    q:{ id:'Apakah Anda pernah minum obat untuk tekanan darah tinggi?', en:'Have you ever taken blood pressure medication?' },
+    hint:{ id:'Termasuk obat antihipertensi yang diresepkan dokter', en:'Including prescription antihypertensive drugs' },
+    options:[
+      { id:'Tidak', en:'No', pts:0 },
+      { id:'Ya', en:'Yes', pts:2 },
+    ]
+  },
+  {
+    id:7, key:'glucose_history',
+    q:{ id:'Apakah Anda pernah terdeteksi memiliki kadar gula darah yang tinggi?', en:'Have you ever been detected to have high blood glucose levels?' },
+    hint:{ id:'Termasuk saat pemeriksaan kesehatan, saat sakit, atau saat hamil', en:'Including during a health check, illness, or pregnancy' },
+    options:[
+      { id:'Tidak', en:'No', pts:0 },
+      { id:'Ya', en:'Yes', pts:5 },
+    ]
+  },
+  {
+    id:8, key:'family_history',
+    q:{ id:'Apakah ada anggota keluarga Anda yang memiliki diabetes?', en:'Do any of your family members have diabetes?' },
+    hint:{ id:'Riwayat keluarga merupakan faktor risiko yang signifikan', en:'Family history is a significant risk factor' },
+    options:[
+      { id:'Tidak ada', en:'No family history', pts:0 },
+      { id:'Kakek/nenek, paman/bibi, atau sepupu', en:'Grandparent, aunt/uncle, or first cousin', pts:3 },
+      { id:'Orang tua, saudara kandung, atau anak', en:'Parent, sibling, or own child', pts:5 },
+    ]
+  }
+];
+
+// ────────── STATE ──────────
+let lang = localStorage.getItem('lang') || (navigator.language.startsWith('en') ? 'en' : 'id');
+let gender = null;
+let currentQ = 0;
+let answers = new Array(8).fill(null);
+let scores = new Array(8).fill(0);
+
+// ────────── INIT ──────────
+window.addEventListener('load', () => {
+  applyLang();
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+});
+
+// ────────── LANGUAGE ──────────
+function setLang(l) {
+  lang = l;
+  localStorage.setItem('lang', l);
+  applyLang();
+}
+
+function applyLang() {
+  // update buttons
+  ['btn-id','btn-id-m'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.toggle('active',lang==='id'); });
+  ['btn-en','btn-en-m'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.toggle('active',lang==='en'); });
+
+  // update all data-t elements
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if(T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+  });
+
+  // update html lang
+  document.documentElement.lang = lang==='id'?'id':'en';
+
+  // re-render active question if on test page
+  if(document.getElementById('test-question-screen').style.display !== 'none') renderQuestion();
+}
+
+// ────────── PAGE NAVIGATION ──────────
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ────────── MOBILE DRAWER ──────────
+function toggleDrawer() { document.getElementById('mobileDrawer').classList.toggle('open'); }
+function closeDrawer(e) {
+  if(!e || !e.target.closest('.mobile-drawer-panel') || e.target===document.getElementById('mobileDrawer'))
+    document.getElementById('mobileDrawer').classList.remove('open');
+}
+
+// ────────── TEST ──────────
+function selectGender(g) {
+  gender = g;
+  document.getElementById('gender-male').classList.toggle('selected', g==='male');
+  document.getElementById('gender-female').classList.toggle('selected', g==='female');
+  const btn = document.getElementById('start-test-btn');
+  btn.style.opacity = '1'; btn.style.pointerEvents = 'auto';
+}
+
+function startTest() {
+  if(!gender) return;
+  document.getElementById('test-intro-screen').style.display = 'none';
+  document.getElementById('test-question-screen').style.display = 'block';
+  currentQ = 0;
+  answers = new Array(8).fill(null);
+  scores = new Array(8).fill(0);
+  renderQuestion();
+}
+
+function getOptions(q) {
+  if(q.optionsByGender) return q.optionsByGender[gender];
+  return q.options;
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  const opts = getOptions(q);
+  const pct = ((currentQ)/8*100).toFixed(0);
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-label').textContent =
+    (lang==='id'?'Pertanyaan ':'Question ') + (currentQ+1) + (lang==='id' ? ' dari 8' : ' of 8');
+  const totalSoFar = scores.reduce((a,b)=>a+b,0);
+  document.getElementById('progress-score').textContent = totalSoFar + (lang==='id' ? ' poin' : ' points');
+  document.getElementById('btn-back').style.visibility = currentQ===0 ? 'hidden' : 'visible';
+  const nextBtn = document.getElementById('btn-next');
+  const isLast = currentQ===7;
+  document.getElementById('btn-next-label').textContent =
+    isLast ? (lang==='id'?'Lihat Hasil':'See Results') : (lang==='id'?'Lanjut':'Next');
+  nextBtn.disabled = answers[currentQ] === null;
+
+  let html = `<div class="question-number">${lang==='id'?'PERTANYAAN':'QUESTION'} ${currentQ+1} / 8</div>`;
+  html += `<div class="question-text">${q.q[lang]}</div>`;
+  html += `<div class="question-hint">${q.hint[lang]}</div>`;
+
+  if(q.hasBmiCalc) {
+    html += `<div class="bmi-helper">
+      <h4>${lang==='id'?'🧮 Kalkulator BMI':'🧮 BMI Calculator'}</h4>
+      <div class="bmi-inputs">
+        <div class="bmi-input-group">
+          <label>${lang==='id'?'Tinggi (cm)':'Height (cm)'}</label>
+          <input type="number" class="bmi-input" id="bmi-height" placeholder="${lang==='id'?'mis. 165':'e.g. 165'}" min="100" max="250" oninput="calcBMI()">
+        </div>
+        <div class="bmi-input-group">
+          <label>${lang==='id'?'Berat (kg)':'Weight (kg)'}</label>
+          <input type="number" class="bmi-input" id="bmi-weight" placeholder="${lang==='id'?'mis. 70':'e.g. 70'}" min="20" max="300" oninput="calcBMI()">
+        </div>
+      </div>
+      <div class="bmi-result" id="bmi-result"></div>
+    </div>`;
+  }
+
+  if(q.hasWaistGuide) {
+    const thresholds = gender==='male'
+      ? (lang==='id'?'Pria: &lt;94 cm (normal), 94–102 cm (meningkat), &gt;102 cm (tinggi)':'Male: &lt;94 cm (normal), 94–102 cm (elevated), &gt;102 cm (high)')
+      : (lang==='id'?'Wanita: &lt;80 cm (normal), 80–88 cm (meningkat), &gt;88 cm (tinggi)':'Female: &lt;80 cm (normal), 80–88 cm (elevated), &gt;88 cm (high)');
+    html += `<div class="waist-guide">
+      📏 <strong>${lang==='id'?'Cara mengukur:':'How to measure:'}</strong>
+      ${lang==='id'?'Ukur di titik tersempit pinggang Anda, biasanya tepat di atas pusar, saat berdiri tegak dan setelah menghembuskan napas normal.':'Measure at the narrowest point of your waist, usually just above the navel, while standing straight and after a normal exhale.'}
+      <br><br>⚠️ ${thresholds}
+    </div>`;
+  }
+
+  html += '<div class="options-list">';
+  opts.forEach((opt, i) => {
+    const selected = answers[currentQ]===i ? 'selected' : '';
+    html += `<button class="option-btn ${selected}" onclick="selectOption(${i})">
+      <div class="option-dot"></div>
+      <div class="option-text">
+        <span class="option-label">${opt[lang]}</span>
+      </div>
+      <span class="option-points">+${opt.pts}${lang==='id'?' poin':' pts'}</span>
+    </button>`;
+  });
+  html += '</div>';
+
+  document.getElementById('question-card').innerHTML = html;
+  nextBtn.disabled = answers[currentQ] === null;
+}
+
+function calcBMI() {
+  const h = parseFloat(document.getElementById('bmi-height').value);
+  const w = parseFloat(document.getElementById('bmi-weight').value);
+  if(!h||!w||h<100||h>250||w<20||w>300) { document.getElementById('bmi-result').textContent=''; return; }
+  const bmi = (w / ((h/100)**2)).toFixed(1);
+  let cat, catColor;
+  if(bmi<18.5){ cat=lang==='id'?'Kurus (Underweight)':'Underweight'; catColor='var(--blue)'; }
+  else if(bmi<25){ cat=lang==='id'?'Normal':'Normal'; catColor='var(--teal)'; }
+  else if(bmi<=30){ cat=lang==='id'?'Gemuk (Overweight)':'Overweight'; catColor='var(--amber)'; }
+  else{ cat=lang==='id'?'Obesitas':'Obese'; catColor='var(--red)'; }
+  document.getElementById('bmi-result').innerHTML = `BMI: <span style="color:${catColor}">${bmi} kg/m² — ${cat}</span>`;
+  // auto-select
+  const opts = getOptions(questions[1]);
+  let autoIdx = 0;
+  if(bmi>=25&&bmi<=30) autoIdx=1;
+  else if(bmi>30) autoIdx=2;
+  selectOption(autoIdx);
+}
+
+function selectOption(i) {
+  answers[currentQ] = i;
+  const opts = getOptions(questions[currentQ]);
+  scores[currentQ] = opts[i].pts;
+  document.getElementById('btn-next').disabled = false;
+  // Update UI without full re-render
+  document.querySelectorAll('.option-btn').forEach((btn, idx) => {
+    btn.classList.toggle('selected', idx===i);
+  });
+}
+
+function nextQuestion() {
+  if(answers[currentQ]===null) return;
+  if(currentQ<7) {
+    currentQ++;
+    renderQuestion();
+    document.getElementById('question-card').style.opacity='0';
+    setTimeout(()=>{ document.getElementById('question-card').style.opacity='1'; },50);
+  } else {
+    showLoadingAndResults();
+  }
+}
+
+function prevQuestion() {
+  if(currentQ>0) { currentQ--; renderQuestion(); }
+}
+
+function showLoadingAndResults() {
+  const ls = document.getElementById('loading-screen');
+  ls.style.display='flex';
+  setTimeout(()=>{
+    ls.style.display='none';
+    buildResults();
+    showPage('results');
+  }, 1800);
+}
+
+// ────────── RESULTS ──────────
+function buildResults() {
+  const total = scores.reduce((a,b)=>a+b,0);
+  let riskClass, riskLabel, riskLabelId, message, messageId, prob;
+
+  if(total<=7){
+    riskClass='risk-low'; riskLabel='Low'; riskLabelId='Rendah';
+    message='Your risk is low. Keep up your healthy lifestyle!';
+    messageId='Risiko Anda rendah. Pertahankan gaya hidup sehat Anda!';
+    prob='~1%';
+  } else if(total<=11){
+    riskClass='risk-slight'; riskLabel='Slightly Elevated'; riskLabelId='Sedikit Meningkat';
+    message='Your risk is slightly elevated. Pay attention to your diet and activity.';
+    messageId='Risiko Anda sedikit meningkat. Perhatikan pola makan dan aktivitas Anda.';
+    prob='~4%';
+  } else if(total<=14){
+    riskClass='risk-moderate'; riskLabel='Moderate Risk'; riskLabelId='Risiko Sedang';
+    message='Your risk is moderate. Lifestyle changes are highly recommended.';
+    messageId='Risiko Anda cukup tinggi. Perubahan gaya hidup sangat disarankan.';
+    prob='~17%';
+  } else if(total<=20){
+    riskClass='risk-high'; riskLabel='High Risk'; riskLabelId='Risiko Tinggi';
+    message='Your risk is high. Consult a doctor soon and start a prevention program.';
+    messageId='Risiko Anda tinggi. Segera konsultasikan dengan dokter dan mulai program pencegahan.';
+    prob='~33%';
+  } else {
+    riskClass='risk-very-high'; riskLabel='Very High Risk'; riskLabelId='Risiko Sangat Tinggi';
+    message='Your risk is very high. Immediate medical consultation and blood glucose testing is strongly advised.';
+    messageId='Risiko Anda sangat tinggi. Sangat disarankan untuk segera berkonsultasi dengan tenaga medis.';
+    prob='~50%';
+  }
+
+  const isHighRisk = total >= 15;
+  const circumference = 2 * Math.PI * 60;
+  const dashArray = (total/26)*circumference;
+
+  // Score Display
+  document.getElementById('score-display').className = 'score-display '+riskClass;
+  document.getElementById('score-display').innerHTML = `
+    <div class="score-circle" style="background:transparent">
+      <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" style="width:180px;height:180px;position:absolute;inset:0;transform:rotate(-90deg)">
+        <circle cx="70" cy="70" r="60" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+        <circle cx="70" cy="70" r="60" fill="none"
+          stroke="${total>20?'#7f0000':total>14?'#B22020':total>11?'#C45A1A':total>7?'#d4a017':'#0E7C5B'}"
+          stroke-width="10" stroke-dasharray="${dashArray} ${circumference}"
+          stroke-linecap="round" id="score-arc"/>
+      </svg>
+      <div class="score-circle-inner">
+        <div class="score-big" id="score-counter">0</div>
+        <div class="score-of">/ 26</div>
+      </div>
+    </div>
+    <div class="risk-badge">${lang==='id'?riskLabelId:riskLabel}</div>
+    <p class="risk-message">${lang==='id'?messageId:message}</p>
+    <div class="risk-probability">
+      📊 ${lang==='id'?'Probabilitas 10 tahun':'10-Year Probability'}: <strong>${prob}</strong>
+    </div>
+    <div class="score-meter">
+      <div class="meter-track">
+        <div class="meter-segments">
+          <div class="meter-seg" style="width:27%;background:#0E7C5B"></div>
+          <div class="meter-seg" style="width:15%;background:#d4a017"></div>
+          <div class="meter-seg" style="width:12%;background:#C45A1A"></div>
+          <div class="meter-seg" style="width:23%;background:#B22020"></div>
+          <div class="meter-seg" style="width:23%;background:#7f0000"></div>
+        </div>
+        <div class="meter-pointer" style="left:${(total/26*100).toFixed(1)}%"></div>
+      </div>
+      <div class="meter-labels">
+        <span class="meter-label">0</span>
+        <span class="meter-label">7</span>
+        <span class="meter-label">11</span>
+        <span class="meter-label">14</span>
+        <span class="meter-label">20</span>
+        <span class="meter-label">26</span>
+      </div>
+    </div>
+  `;
+
+  // animate counter
+  let cnt=0; const timer=setInterval(()=>{
+    cnt = Math.min(cnt+1, total);
+    document.getElementById('score-counter').textContent = cnt;
+    if(cnt>=total) clearInterval(timer);
+  }, 60);
+
+  // Build recommendations
+  const recsList = document.getElementById('recs-list');
+  recsList.innerHTML = '';
+  const recs = [];
+
+  if(scores[1]>0) recs.push({ icon:'⚖️', bg:'var(--amber-light)', color:'var(--amber)',
+    t:'Manajemen Berat Badan', e:'Weight Management',
+    d:'BMI Anda berada di atas normal. Menurunkan berat badan 5–7% dapat secara signifikan mengurangi risiko diabetes.',
+    de:'Your BMI is above normal. Losing 5–7% of body weight can significantly reduce diabetes risk.'
+  });
+  if(answers[3]===1) recs.push({ icon:'🏃', bg:'var(--blue-light)', color:'var(--blue)',
+    t:'Tingkatkan Aktivitas Fisik', e:'Increase Physical Activity',
+    d:'Berolahraga ≥30 menit setiap hari dapat mengurangi risiko diabetes hingga 58%.',
+    de:'Exercising ≥30 minutes every day can reduce diabetes risk by up to 58%.'
+  });
+  if(answers[4]===1) recs.push({ icon:'🥗', bg:'var(--teal-light)', color:'var(--teal)',
+    t:'Perbaiki Pola Makan', e:'Improve Your Diet',
+    d:'Konsumsi lebih banyak sayuran dan buah-buahan setiap hari. Serat membantu mengontrol kadar gula darah.',
+    de:'Eat more vegetables and fruits daily. Fiber helps control blood glucose levels.'
+  });
+  if(answers[5]===1) recs.push({ icon:'🩺', bg:'var(--amber-light)', color:'var(--amber)',
+    t:'Pantau Tekanan Darah', e:'Monitor Blood Pressure',
+    d:'Anda sedang mengonsumsi obat tekanan darah tinggi. Tekanan darah yang terkontrol penting untuk kesehatan jangka panjang.',
+    de:'You are taking blood pressure medication. Controlled blood pressure is vital for long-term health.'
+  });
+  if(answers[6]===1) recs.push({ icon:'🔴', bg:'var(--red-light)', color:'var(--red)',
+    t:'Segera Konsultasi ke Dokter!', e:'Consult a Doctor Immediately!',
+    d:'Anda pernah terdeteksi memiliki kadar gula darah tinggi. Ini adalah tanda peringatan penting. Segera lakukan tes HbA1c.',
+    de:'You have previously been detected with high blood glucose. This is an important warning sign. Get an HbA1c test soon.'
+  });
+  if(answers[7]>0) recs.push({ icon:'👨‍👩‍👧', bg:'var(--blue-light)', color:'var(--blue)',
+    t:'Riwayat Keluarga Positif', e:'Family History Positive',
+    d:'Dengan riwayat keluarga diabetes, tes gula darah rutin setiap 1–2 tahun sangat dianjurkan.',
+    de:'With a family history of diabetes, regular blood glucose testing every 1–2 years is highly recommended.'
+  });
+
+  if(recs.length===0) recs.push({ icon:'✅', bg:'var(--teal-light)', color:'var(--teal)',
+    t:'Pertahankan Gaya Hidup Sehat!', e:'Maintain Your Healthy Lifestyle!',
+    d:'Risiko Anda rendah. Terus jaga pola makan sehat, olahraga teratur, dan lakukan tes ulang dalam 1 tahun.',
+    de:'Your risk is low. Continue maintaining a healthy diet, regular exercise, and retest in 1 year.'
+  });
+
+  recs.forEach(rec => {
+    const div = document.createElement('div');
+    div.className = 'rec-item';
+    div.innerHTML = `
+      <div class="rec-icon" style="background:${rec.bg}; color:${rec.color}">${rec.icon}</div>
+      <div class="rec-content">
+        <h4>${lang==='id'?rec.t:rec.e}</h4>
+        <p>${lang==='id'?rec.d:rec.de}</p>
+      </div>
+    `;
+    recsList.appendChild(div);
+  });
+
+  // Upsell
+  const upsellHTML = `
+    <div class="upsell-section" style="margin-bottom:32px">
+      <div class="upsell-badge">${lang==='id'?'📋 Program Pencegahan':'📋 Prevention Program'}</div>
+      <h2>${lang==='id'?'Langkah Selanjutnya: Program Pencegahan Diabetes':'Next Step: Diabetes Prevention Program'}</h2>
+      <p>${lang==='id'
+        ? 'Intermittent fasting terbukti secara klinis membantu menurunkan risiko diabetes hingga 58%. Program kami menggabungkan panduan puasa, rencana makan, dan pendampingan coach.'
+        : 'Intermittent fasting is clinically proven to help reduce diabetes risk by up to 58%. Our program combines fasting guides, meal plans, and coach mentoring.'
+      }</p>
+      <div class="upsell-benefits">
+        <div class="upsell-benefit"><span>⚖️</span> ${lang==='id'?'Turunkan berat badan':'Weight loss'}</div>
+        <div class="upsell-benefit"><span>🩸</span> ${lang==='id'?'Regulasi insulin':'Insulin regulation'}</div>
+        <div class="upsell-benefit"><span>🌿</span> ${lang==='id'?'Gaya hidup berkelanjutan':'Sustainable lifestyle'}</div>
+      </div>
+      <div class="upsell-pricing">
+        <div class="upsell-price-orig">Rp 249.000/bln</div>
+        <div class="upsell-price"><sup>Rp</sup>99.000 <span style="font-size:1rem;font-weight:400;color:rgba(255,255,255,0.7)">${lang==='id'?'untuk memulai':'to get started'}</span></div>
+      </div>
+      <button class="upsell-cta" onclick="showPage('program')">
+        ${lang==='id'?'Mulai Program Sekarang →':'Start the Program Now →'}
+      </button>
+      <div style="margin-top:16px;font-size:0.82rem;opacity:0.7">
+        ⭐⭐⭐⭐⭐ ${lang==='id'?'4.8/5 dari 3.200+ peserta':'4.8/5 from 3,200+ participants'}
+      </div>
+    </div>
+  `;
+
+  if(isHighRisk) {
+    document.getElementById('upsell-top').innerHTML = upsellHTML;
+    document.getElementById('upsell-bottom').innerHTML = '';
+  } else {
+    document.getElementById('upsell-top').innerHTML = '';
+    document.getElementById('upsell-bottom').innerHTML = upsellHTML;
+  }
+}
+
+function retakeTest() {
+  showPage('test');
+  document.getElementById('test-intro-screen').style.display = 'block';
+  document.getElementById('test-question-screen').style.display = 'none';
+  gender = null;
+  document.getElementById('gender-male').classList.remove('selected');
+  document.getElementById('gender-female').classList.remove('selected');
+  const btn = document.getElementById('start-test-btn');
+  btn.style.opacity='0.4'; btn.style.pointerEvents='none';
+}
+
+// ────────── SHARE / TOAST ──────────
+function shareWA() {
+  const txt = lang==='id'
+    ? 'Saya baru saja mengecek risiko diabetes saya dengan tes FINDRISC. Coba juga sekarang, gratis!'
+    : 'I just checked my diabetes risk with the FINDRISC test. Try it now, it\'s free!';
+  window.open('https://wa.me/?text='+encodeURIComponent(txt+' '+window.location.href));
+}
+function shareFB() { window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(window.location.href)); }
+function shareTG() {
+  const txt = lang==='id'?'Cek risiko diabetes kamu sekarang, gratis!':'Check your diabetes risk now, it\'s free!';
+  window.open('https://t.me/share/url?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent(txt));
+}
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href).then(()=>{
+    showToast(lang==='id'?'Link disalin!':'Link copied!');
+  });
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
