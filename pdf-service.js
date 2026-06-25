@@ -1,0 +1,363 @@
+const PAGE = {
+  width: 210,
+  height: 297,
+  margin: 14,
+  bottom: 274
+};
+
+const COLORS = {
+  blue: [26, 86, 168],
+  blueDark: [15, 61, 122],
+  teal: [14, 124, 91],
+  yellow: [212, 160, 23],
+  amber: [196, 90, 26],
+  red: [178, 32, 32],
+  redDark: [127, 0, 0],
+  text: [17, 24, 39],
+  muted: [107, 114, 128],
+  border: [209, 213, 219],
+  bg: [247, 249, 252],
+  white: [255, 255, 255]
+};
+
+function getCreatedAtDate(resultData) {
+  const createdAt = resultData?.createdAt;
+  if (createdAt?.toDate) return createdAt.toDate();
+  if (createdAt instanceof Date) return createdAt;
+  if (typeof createdAt === "string" || typeof createdAt === "number") {
+    const parsed = new Date(createdAt);
+    if (!Number.isNaN(parsed.getTime())) return parsed;
+  }
+  return new Date();
+}
+
+function formatDate(date) {
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
+}
+
+function formatFileDate(date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function sanitizeText(value) {
+  return String(value || "-")
+    .replace(/\u2265/g, ">=")
+    .replace(/\u2264/g, "<=")
+    .replace(/[\u2013\u2014]/g, "-")
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/\u00B2/g, "2")
+    .replace(/[^\x09\x0A\x0D\x20-\x7E\u00A0-\u00FF]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function setTextColor(doc, color = COLORS.text) {
+  doc.setTextColor(color[0], color[1], color[2]);
+}
+
+function setFillColor(doc, color) {
+  doc.setFillColor(color[0], color[1], color[2]);
+}
+
+function setDrawColor(doc, color = COLORS.border) {
+  doc.setDrawColor(color[0], color[1], color[2]);
+}
+
+function writeLines(doc, text, x, y, maxWidth, lineHeight = 5) {
+  const lines = doc.splitTextToSize(sanitizeText(text), maxWidth);
+  lines.forEach((line, index) => {
+    doc.text(line, x, y + (index * lineHeight));
+  });
+  return y + (lines.length * lineHeight);
+}
+
+function riskColor(resultData) {
+  const riskClass = resultData?.riskClass || "";
+  if (riskClass.includes("very-high")) return COLORS.redDark;
+  if (riskClass.includes("high")) return COLORS.red;
+  if (riskClass.includes("moderate")) return COLORS.amber;
+  if (riskClass.includes("slight")) return COLORS.yellow;
+  return COLORS.teal;
+}
+
+function ensureSpace(doc, y, neededHeight) {
+  if (y + neededHeight <= PAGE.bottom) return y;
+  doc.addPage();
+  drawPageHeader(doc, true);
+  return 48;
+}
+
+function drawPageHeader(doc, compact = false) {
+  setFillColor(doc, COLORS.blueDark);
+  doc.rect(0, 0, PAGE.width, compact ? 20 : 38, "F");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(compact ? 11 : 17);
+  setTextColor(doc, COLORS.white);
+  doc.text("CekDiabetes.id", PAGE.margin, compact ? 13 : 17);
+
+  if (!compact) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Laporan Hasil Tes Risiko Diabetes FINDRISC", PAGE.margin, 27);
+    doc.text("Screening informatif, bukan diagnosis medis.", PAGE.margin, 33);
+  }
+}
+
+function drawSectionTitle(doc, title, y) {
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  setTextColor(doc, COLORS.blueDark);
+  doc.text(sanitizeText(title), PAGE.margin, y);
+  setDrawColor(doc, COLORS.border);
+  doc.line(PAGE.margin, y + 3, PAGE.width - PAGE.margin, y + 3);
+  return y + 10;
+}
+
+function drawInfoPill(doc, label, value, x, y, width) {
+  setFillColor(doc, COLORS.bg);
+  setDrawColor(doc, COLORS.border);
+  doc.roundedRect(x, y, width, 18, 3, 3, "FD");
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.8);
+  setTextColor(doc, COLORS.muted);
+  doc.text(sanitizeText(label).toUpperCase(), x + 4, y + 6);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9.5);
+  setTextColor(doc, COLORS.text);
+  writeLines(doc, value, x + 4, y + 12, width - 8, 4);
+}
+
+function drawSummaryCard(doc, resultData, date, y) {
+  const color = riskColor(resultData);
+  setFillColor(doc, COLORS.white);
+  setDrawColor(doc, COLORS.border);
+  doc.roundedRect(PAGE.margin, y, PAGE.width - (PAGE.margin * 2), 54, 4, 4, "FD");
+
+  setFillColor(doc, color);
+  doc.roundedRect(PAGE.margin + 6, y + 8, 36, 30, 4, 4, "F");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  setTextColor(doc, COLORS.white);
+  doc.text(`${resultData.score ?? 0}`, PAGE.margin + 14, y + 21);
+  doc.setFontSize(8.5);
+  doc.text(`/ ${resultData.maxScore ?? 26}`, PAGE.margin + 23, y + 21);
+  doc.setFontSize(7.5);
+  doc.text("SKOR", PAGE.margin + 15, y + 30);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(13);
+  setTextColor(doc, color);
+  doc.text(sanitizeText(resultData.riskLevel || "-"), PAGE.margin + 50, y + 14);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  setTextColor(doc, COLORS.text);
+  writeLines(doc, resultData.riskMessage || "-", PAGE.margin + 50, y + 22, 128, 4.5);
+
+  drawInfoPill(doc, "Tanggal tes", formatDate(date), PAGE.margin + 50, y + 32, 76);
+  drawInfoPill(doc, "Estimasi 10 tahun", resultData.probability || "-", PAGE.margin + 132, y + 32, 46);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  setTextColor(doc, COLORS.muted);
+  writeLines(doc, `Email: ${resultData.email || "-"}`, PAGE.margin + 6, y + 47, 38, 3.8);
+
+  return y + 64;
+}
+
+function drawRiskMeter(doc, resultData, y) {
+  const score = Number(resultData.score || 0);
+  const maxScore = Number(resultData.maxScore || 26);
+  const x = PAGE.margin;
+  const width = PAGE.width - (PAGE.margin * 2);
+  const barY = y + 12;
+  const segments = [
+    { label: "0-7 Rendah", end: 7, color: COLORS.teal },
+    { label: "8-11 Meningkat", end: 11, color: COLORS.yellow },
+    { label: "12-14 Sedang", end: 14, color: COLORS.amber },
+    { label: "15-20 Tinggi", end: 20, color: COLORS.red },
+    { label: "21-26 Sangat tinggi", end: 26, color: COLORS.redDark }
+  ];
+  let start = 0;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  setTextColor(doc, COLORS.text);
+  doc.text("Interpretasi skor", x, y);
+
+  segments.forEach((segment) => {
+    const segmentWidth = ((segment.end - start) / maxScore) * width;
+    setFillColor(doc, segment.color);
+    doc.rect(x + ((start / maxScore) * width), barY, segmentWidth, 5, "F");
+    start = segment.end;
+  });
+
+  const pointerX = x + Math.min(Math.max(score / maxScore, 0), 1) * width;
+  setFillColor(doc, COLORS.text);
+  doc.triangle(pointerX, barY - 3, pointerX - 2.5, barY - 7, pointerX + 2.5, barY - 7, "F");
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.5);
+  setTextColor(doc, COLORS.muted);
+  let labelX = x;
+  segments.forEach((segment) => {
+    doc.text(segment.label, labelX, barY + 13);
+    labelX += width / segments.length;
+  });
+
+  return y + 30;
+}
+
+function drawRecommendations(doc, recommendations, y) {
+  y = drawSectionTitle(doc, "Rekomendasi personal", y);
+
+  if (recommendations.length === 0) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9.5);
+    setTextColor(doc, COLORS.muted);
+    doc.text("-", PAGE.margin, y);
+    return y + 8;
+  }
+
+  recommendations.forEach((item, index) => {
+    const title = sanitizeText(item.title || item.t || item.e || "Rekomendasi");
+    const description = sanitizeText(item.description || item.d || item.de || "");
+    const lines = doc.splitTextToSize(description, 158);
+    const cardHeight = Math.max(24, 14 + (lines.length * 4.6));
+    y = ensureSpace(doc, y, cardHeight + 6);
+
+    setFillColor(doc, COLORS.white);
+    setDrawColor(doc, COLORS.border);
+    doc.roundedRect(PAGE.margin, y, PAGE.width - (PAGE.margin * 2), cardHeight, 4, 4, "FD");
+
+    setFillColor(doc, COLORS.blue);
+    doc.circle(PAGE.margin + 8, y + 10, 5, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    setTextColor(doc, COLORS.white);
+    doc.text(String(index + 1), PAGE.margin + 6.7, y + 12.5);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    setTextColor(doc, COLORS.text);
+    doc.text(title, PAGE.margin + 18, y + 9);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.8);
+    setTextColor(doc, COLORS.muted);
+    lines.forEach((line, lineIndex) => {
+      doc.text(line, PAGE.margin + 18, y + 16 + (lineIndex * 4.6));
+    });
+
+    y += cardHeight + 6;
+  });
+
+  return y;
+}
+
+function drawAnswers(doc, answers, y) {
+  if (!Array.isArray(answers) || answers.length === 0) return y;
+
+  y = ensureSpace(doc, y, 34);
+  y = drawSectionTitle(doc, "Ringkasan jawaban", y);
+
+  answers.forEach((answer, index) => {
+    y = ensureSpace(doc, y, 16);
+    const question = sanitizeText(answer.question || answer.key || `Pertanyaan ${index + 1}`);
+    const selected = sanitizeText(answer.answer || "-");
+    const score = answer.score ?? 0;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.5);
+    setTextColor(doc, COLORS.text);
+    doc.text(`${index + 1}.`, PAGE.margin, y);
+    writeLines(doc, question, PAGE.margin + 7, y, 120, 4);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.3);
+    setTextColor(doc, COLORS.muted);
+    writeLines(doc, selected, PAGE.margin + 7, y + 5, 138, 4);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.5);
+    setTextColor(doc, COLORS.blueDark);
+    doc.text(`${score} poin`, PAGE.width - PAGE.margin - 18, y);
+
+    y += 14;
+  });
+
+  return y + 4;
+}
+
+function drawFooter(doc) {
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let page = 1; page <= pageCount; page += 1) {
+    doc.setPage(page);
+    setDrawColor(doc, COLORS.border);
+    doc.line(PAGE.margin, 282, PAGE.width - PAGE.margin, 282);
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8);
+    setTextColor(doc, COLORS.muted);
+    doc.text("Hasil ini bersifat informatif dan bukan diagnosis medis.", PAGE.margin, 287);
+    doc.text(`Halaman ${page}/${pageCount}`, PAGE.width - PAGE.margin - 22, 287);
+  }
+}
+
+export function exportResultToPDF(resultData) {
+  if (!window.jspdf?.jsPDF) {
+    throw new Error("Library jsPDF belum siap.");
+  }
+  if (!resultData) {
+    throw new Error("Data hasil tes tidak tersedia.");
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const date = getCreatedAtDate(resultData);
+  const recommendations = Array.isArray(resultData.recommendations)
+    ? resultData.recommendations
+    : [];
+
+  doc.setProperties({
+    title: "CekDiabetes.id - Hasil Tes Risiko Diabetes",
+    subject: "Laporan hasil tes FINDRISC",
+    author: "CekDiabetes.id"
+  });
+
+  drawPageHeader(doc);
+  let y = 50;
+
+  y = drawSummaryCard(doc, resultData, date, y);
+  y = drawRiskMeter(doc, resultData, y);
+
+  y = ensureSpace(doc, y, 34);
+  y = drawSectionTitle(doc, "Catatan hasil", y);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9.5);
+  setTextColor(doc, COLORS.text);
+  y = writeLines(
+    doc,
+    "Gunakan laporan ini sebagai bahan diskusi awal dengan tenaga kesehatan, terutama jika skor Anda berada pada kategori sedang, tinggi, atau sangat tinggi.",
+    PAGE.margin,
+    y,
+    PAGE.width - (PAGE.margin * 2),
+    5
+  ) + 8;
+
+  y = drawRecommendations(doc, recommendations, y);
+  y = drawAnswers(doc, resultData.answers, y);
+
+  drawFooter(doc);
+  doc.save(`cekdiabetes-result-${formatFileDate(date)}.pdf`);
+}

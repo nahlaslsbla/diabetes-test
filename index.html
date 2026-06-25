@@ -491,15 +491,57 @@
 
   /* ── RESULTS PAGE ── */
   .results-page { padding-top: 68px; background:var(--bg); min-height:100vh; }
-  .results-inner { max-width:900px; margin:0 auto; padding:40px 24px 80px; }
+  .results-inner { max-width:1040px; margin:0 auto; padding:40px 24px 80px; }
   .result-header { text-align:center; margin-bottom:48px; }
   .result-header h1 { font-family:'DM Serif Display',serif; font-size:2rem; margin-bottom:8px; }
   .result-header p { color:var(--text-muted); }
 
   .score-display {
-    background:white; border-radius:24px; padding:48px 36px;
-    text-align:center; box-shadow:var(--shadow); margin-bottom:32px;
+    background:white; border-radius:24px; padding:28px;
+    box-shadow:var(--shadow); margin-bottom:32px;
     border:2px solid var(--border);
+  }
+  .result-summary-grid {
+    display:grid; grid-template-columns:minmax(0,0.95fr) minmax(320px,1.05fr);
+    gap:24px; align-items:stretch;
+  }
+  .score-panel, .priority-panel {
+    border:1.5px solid var(--border); border-radius:18px; padding:24px;
+    background:var(--white);
+  }
+  .score-panel { text-align:center; }
+  .priority-panel {
+    display:flex; flex-direction:column; gap:18px;
+    background:linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+  }
+  .priority-eyebrow {
+    color:var(--blue); font-size:0.78rem; font-weight:800;
+    letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;
+  }
+  .priority-panel h3 {
+    font-family:'Sora',sans-serif; font-size:1.25rem; line-height:1.3;
+    margin-bottom:6px;
+  }
+  .priority-panel > p { color:var(--text-muted); font-size:0.92rem; line-height:1.55; }
+  .priority-list { display:flex; flex-direction:column; gap:10px; }
+  .priority-item {
+    display:grid; grid-template-columns:38px 1fr; gap:12px; align-items:flex-start;
+    padding:12px; border:1.5px solid var(--border); border-radius:14px;
+    background:white;
+  }
+  .priority-icon {
+    width:38px; height:38px; border-radius:12px; display:flex;
+    align-items:center; justify-content:center; font-size:1.05rem; font-weight:800;
+    background:var(--blue-light); color:var(--blue); flex-shrink:0;
+  }
+  .priority-item h4 {
+    font-family:'Sora',sans-serif; font-size:0.92rem; line-height:1.35;
+    margin-bottom:3px;
+  }
+  .priority-item p { color:var(--text-muted); font-size:0.82rem; line-height:1.45; }
+  .result-summary-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:auto; }
+  .result-summary-actions .btn-outline, .result-summary-actions .btn-cta-sm {
+    text-decoration:none;
   }
   .score-circle {
     width:180px; height:180px; border-radius:50%;
@@ -536,9 +578,7 @@
   .risk-very-high .risk-badge { background:var(--red-light); color:var(--red); }
 
   /* Score meter */
-  .score-meter {
-    max-width:480px; margin:24px auto 0;
-  }
+  .score-meter { max-width:480px; margin:24px auto 0; }
   .meter-track { height:14px; background:var(--border); border-radius:7px; overflow:hidden; position:relative; }
   .meter-segments { display:flex; height:100%; }
   .meter-seg { height:100%; }
@@ -548,7 +588,8 @@
 
   /* Recommendations */
   .recs-section { background:white; border-radius:20px; padding:32px; box-shadow:var(--shadow); margin-bottom:32px; }
-  .recs-section h2 { font-family:'DM Serif Display',serif; font-size:1.6rem; margin-bottom:24px; }
+  .recs-section h2 { font-family:'DM Serif Display',serif; font-size:1.6rem; margin-bottom:8px; }
+  .recs-section-subtitle { color:var(--text-muted); font-size:0.92rem; margin-bottom:24px; }
   .rec-item {
     display:flex; gap:14px; padding:16px; border-radius:12px;
     border:1.5px solid var(--border); margin-bottom:12px; transition:all var(--transition);
@@ -602,6 +643,62 @@
     display:inline-flex; align-items:center; gap:8px;
   }
   .btn-outline:hover { border-color:var(--blue); color:var(--blue); }
+
+  /* Auth & history */
+  .auth-chip {
+    border:1.5px solid var(--border); background:white; color:var(--text);
+    border-radius:10px; padding:9px 14px; cursor:pointer;
+    font-family:'DM Sans',sans-serif; font-weight:700; font-size:0.86rem;
+    transition:all var(--transition);
+  }
+  .auth-chip:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-light); }
+  .auth-layout {
+    display:grid; grid-template-columns:minmax(280px,360px) 1fr;
+    gap:24px; align-items:start;
+  }
+  .auth-card, .history-panel {
+    background:white; border:1.5px solid var(--border); border-radius:16px;
+    padding:24px; box-shadow:var(--shadow);
+  }
+  .auth-card h2, .history-panel h2 {
+    font-family:'Sora',sans-serif; font-size:1.05rem; font-weight:800; margin-bottom:12px;
+  }
+  .auth-card p, .history-panel p { color:var(--text-muted); font-size:0.9rem; margin-bottom:16px; }
+  .auth-form { display:flex; flex-direction:column; gap:12px; }
+  .auth-input {
+    width:100%; border:1.5px solid var(--border); border-radius:10px;
+    padding:12px 14px; font-family:'DM Sans',sans-serif; font-size:0.95rem;
+    outline:none; transition:border-color var(--transition);
+  }
+  .auth-input:focus { border-color:var(--blue); }
+  .auth-actions { display:flex; gap:10px; flex-wrap:wrap; }
+  .auth-actions button:disabled { opacity:0.6; cursor:not-allowed; }
+  .auth-submit { background:var(--blue); color:white; border-color:var(--blue); }
+  .auth-submit:hover { background:var(--blue-dark); color:white; border-color:var(--blue-dark); }
+  .auth-user-email {
+    font-family:'Sora',sans-serif; font-weight:700; color:var(--blue);
+    word-break:break-word; margin-bottom:16px;
+  }
+  .mobile-auth-email {
+    color:var(--text-muted); font-size:0.85rem; padding:0 16px 12px;
+    word-break:break-word;
+  }
+  .history-state {
+    color:var(--text-muted); padding:18px; background:var(--bg);
+    border-radius:12px; border:1px dashed var(--border);
+  }
+  .history-list { display:flex; flex-direction:column; gap:14px; }
+  .history-card {
+    display:grid; grid-template-columns:1fr auto auto; gap:16px; align-items:center;
+    border:1.5px solid var(--border); border-radius:14px; padding:18px;
+    background:var(--white);
+  }
+  .history-date { color:var(--text-muted); font-size:0.82rem; margin-bottom:4px; }
+  .history-card h3 { font-family:'Sora',sans-serif; font-size:1rem; margin-bottom:4px; }
+  .history-card p { margin:0; color:var(--text-muted); font-size:0.88rem; }
+  .history-score { text-align:right; min-width:76px; }
+  .history-score strong { display:block; font-family:'Sora',sans-serif; font-size:1.2rem; color:var(--blue); }
+  .history-score span { color:var(--text-muted); font-size:0.85rem; }
 
   /* ── PROGRAM PAGE ── */
   .program-hero {
@@ -731,18 +828,26 @@
     .footer-top { grid-template-columns:1fr 1fr; }
     .pricing-cards { grid-template-columns:1fr; }
     .article-grid { grid-template-columns:1fr; }
+    .result-summary-grid { grid-template-columns:1fr; }
   }
   @media(max-width:700px) {
     .nav-links { display:none; }
     .hamburger { display:flex; }
     .lang-toggle { display:none; }
     .btn-cta-sm { display:none; }
+    .auth-chip { display:none; }
+    .result-summary-actions .btn-cta-sm { display:inline-flex; }
+    .score-display { padding:18px; }
+    .score-panel, .priority-panel { padding:18px; }
     .hero h1 { font-size:2rem; }
     .hero-content { padding:48px 24px; }
     .footer-top { grid-template-columns:1fr; }
     .upsell-benefits { flex-direction:column; }
     .result-actions { flex-direction:column; }
     .bmi-inputs { flex-direction:column; }
+    .auth-layout { grid-template-columns:1fr; }
+    .history-card { grid-template-columns:1fr; }
+    .history-score { text-align:left; }
   }
   @media(max-width:480px) {
     .stats-grid { grid-template-columns:1fr 1fr; }
@@ -763,6 +868,7 @@
     <li><a href="#" onclick="showPage('home')">Beranda</a></li>
     <li><a href="#" onclick="showPage('test')">Mulai Tes</a></li>
     <li><a href="#" onclick="showPage('learn')">Edukasi</a></li>
+    <li><a href="#" onclick="showPage('history')">Riwayat</a></li>
     <!-- <li><a href="#" onclick="showPage('program')">Program</a></li> -->
     <li><a href="#" onclick="showPage('about')">Tentang</a></li>
   </ul>
@@ -771,6 +877,7 @@
       <button class="lang-btn active" id="btn-id" onclick="setLang('id')">ID</button>
       <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
     </div>
+    <button class="auth-chip" id="nav-auth-chip" onclick="showPage('history')">Masuk</button>
     <a href="#" class="btn-cta-sm" onclick="showPage('test')">
       <span data-t="nav_cta">Mulai Tes</span> →
     </a>
@@ -796,6 +903,9 @@
       <a class="mobile-drawer-link" onclick="showPage('about');closeDrawer()" data-t="nav_about">ℹ️ Tentang</a>
     </div>
     
+    <a class="mobile-drawer-link" onclick="showPage('history');closeDrawer()">Riwayat Hasil</a>
+    <div class="mobile-auth-email" id="mobile-auth-email">Belum login</div>
+
     <div class="mobile-drawer-lang">
       <div class="lang-toggle" style="justify-content:center;width:100%">
         <button class="lang-btn active" id="btn-id-m" onclick="setLang('id')">ID</button>
@@ -1176,7 +1286,8 @@
       </div>
       <div id="upsell-top"></div>
       <div class="recs-section" id="recs-section">
-        <h2 data-t="recs_title">Rekomendasi Personal Anda</h2>
+        <h2 data-t="recs_title">Detail Rekomendasi Personal Anda</h2>
+        <p class="recs-section-subtitle" data-t="recs_detail_sub">Daftar lengkap rekomendasi berdasarkan jawaban Anda.</p>
         <div id="recs-list"></div>
       </div>
       <div id="upsell-bottom"></div>
@@ -1191,6 +1302,7 @@
       </div>
      
       <div class="result-actions">
+        <button class="btn-outline" onclick="window.exportLatestResultPDF()">Export PDF</button>
         <button class="btn-outline" onclick="retakeTest()">🔄 <span data-t="retake">Tes Ulang</span></button>
         <!-- <button class="btn-outline" onclick="showPage('program')">📋 <span data-t="view_program">Lihat Program</span></button> -->
         <button class="btn-outline" onclick="window.print()">🖨️ <span data-t="print">Cetak</span></button>
@@ -1200,6 +1312,47 @@
 </div>
 
 <!-- ═══════════════ PROGRAM PAGE ═══════════════ -->
+<!-- HISTORY PAGE -->
+<div class="page" id="page-history">
+  <div class="static-page">
+    <div class="static-hero">
+      <h1>Riwayat Hasil</h1>
+      <p>Simpan dan lihat kembali hasil tes FINDRISC Anda.</p>
+    </div>
+    <div class="static-content" style="max-width:1120px">
+      <div class="auth-layout">
+        <div class="auth-card">
+          <div id="auth-guest-box">
+            <h2>Masuk atau daftar</h2>
+            <p>Login untuk menyimpan hasil tes dan melihat riwayat Anda.</p>
+            <div class="auth-form">
+              <input class="auth-input" id="auth-email" type="email" autocomplete="email" placeholder="Email">
+              <input class="auth-input" id="auth-password" type="password" autocomplete="current-password" placeholder="Password minimal 6 karakter">
+              <div class="auth-actions">
+                <button class="btn-outline auth-submit" id="auth-login-btn" onclick="window.handleAuthLogin()">Login</button>
+                <button class="btn-outline" id="auth-register-btn" onclick="window.handleAuthRegister()">Register</button>
+              </div>
+            </div>
+          </div>
+          <div id="auth-user-box" style="display:none">
+            <h2>Akun aktif</h2>
+            <p>Hasil tes baru akan otomatis tersimpan ke riwayat.</p>
+            <div class="auth-user-email" id="auth-current-email">-</div>
+            <button class="btn-outline" id="auth-logout-btn" onclick="window.handleAuthLogout()">Logout</button>
+          </div>
+        </div>
+
+        <div class="history-panel">
+          <h2>Riwayat tes tersimpan</h2>
+          <p>Riwayat hanya menampilkan hasil milik akun yang sedang login.</p>
+          <div class="history-state" id="history-state">Silakan login untuk melihat riwayat hasil tes.</div>
+          <div class="history-list" id="history-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- PAGE PROGRAM (COMMENTED OUT)
 <div class="page" id="page-program">
   <div class="static-page">
@@ -1378,6 +1531,7 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 // ────────── TRANSLATION STRINGS ──────────
 const T = {
@@ -1432,7 +1586,7 @@ const T = {
     privacy_note:'🔒 Jawaban Anda tidak disimpan kecuali Anda membuat akun.',
     btn_back:'Kembali', btn_next:'Lanjut',
     result_title:'Hasil Tes Anda', result_sub:'Berdasarkan jawaban Anda, berikut adalah penilaian risiko diabetes Anda.',
-    recs_title:'Rekomendasi Personal Anda',
+    recs_title:'Detail Rekomendasi Personal Anda', recs_detail_sub:'Daftar lengkap rekomendasi berdasarkan jawaban Anda.',
     share_result:'Bagikan Hasil Anda', share_result_sub:'Bantu teman dan keluarga mengetahui risiko mereka.',
     copy_link:'Salin Link', retake:'Tes Ulang', view_program:'Lihat Program', print:'Cetak',
     calc_title:'Menghitung skor Anda...', calc_sub:'Menganalisis jawaban dengan algoritma FINDRISC',
@@ -1528,7 +1682,7 @@ const T = {
     privacy_note:'🔒 Your answers are not saved unless you create an account.',
     btn_back:'Back', btn_next:'Next',
     result_title:'Your Test Results', result_sub:'Based on your answers, here is your diabetes risk assessment.',
-    recs_title:'Your Personal Recommendations',
+    recs_title:'Your Detailed Personal Recommendations', recs_detail_sub:'A complete recommendation list based on your answers.',
     share_result:'Share Your Result', share_result_sub:'Help friends and family know their risk.',
     copy_link:'Copy Link', retake:'Retake Test', view_program:'View Program', print:'Print',
     calc_title:'Calculating your score...', calc_sub:'Analyzing your answers with the FINDRISC algorithm',
@@ -1708,7 +1862,10 @@ function applyLang() {
 // ────────── PAGE NAVIGATION ──────────
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
+  const targetPage = document.getElementById('page-'+page);
+  if(!targetPage) return;
+  targetPage.classList.add('active');
+  if(page === 'history') window.renderHistoryPage?.();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -1867,6 +2024,64 @@ function showLoadingAndResults() {
 }
 
 // ────────── RESULTS ──────────
+function scrollToDetailRecommendations() {
+  document.getElementById('recs-section')?.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function getPriorityRecommendations(total, recs, isHighRisk) {
+  if(isHighRisk) {
+    return lang==='id'
+      ? [
+        { title:'Segera konsultasi ke dokter', desc:'Bawa hasil ini sebagai bahan diskusi awal dan minta evaluasi risiko diabetes lebih lanjut.' },
+        { title:'Lakukan tes HbA1c / gula darah', desc:'Pemeriksaan laboratorium membantu memastikan kondisi gula darah Anda saat ini.' },
+        { title:'Pantau tekanan darah', desc:'Tekanan darah yang terkontrol penting untuk mengurangi risiko komplikasi metabolik.' },
+        { title:'Perbaiki pola makan dan aktivitas fisik', desc:'Mulai dari langkah realistis: makan lebih seimbang dan bergerak minimal 30 menit per hari.' },
+      ]
+      : [
+        { title:'Consult a doctor soon', desc:'Bring this result as an initial discussion point and ask for further diabetes risk evaluation.' },
+        { title:'Take an HbA1c / blood glucose test', desc:'Lab testing helps confirm your current blood glucose condition.' },
+        { title:'Monitor blood pressure', desc:'Controlled blood pressure is important to reduce metabolic complication risk.' },
+        { title:'Improve diet and physical activity', desc:'Start with realistic steps: eat more balanced meals and move at least 30 minutes per day.' },
+      ];
+  }
+
+  const mappedRecs = recs.slice(0, 4).map(rec => ({
+    title: lang==='id'?rec.t:rec.e,
+    desc: lang==='id'?rec.d:rec.de,
+  }));
+  const fallback = lang==='id'
+    ? [
+      { title:'Pertahankan kebiasaan sehat', desc:'Jaga pola makan, aktivitas fisik, dan berat badan agar risiko tetap terkendali.' },
+      { title:'Ulangi tes secara berkala', desc:'Lakukan skrining ulang dalam 6-12 bulan atau saat kondisi kesehatan berubah.' },
+      { title:'Simpan hasil untuk pemantauan', desc:'Gunakan hasil ini sebagai baseline untuk membandingkan perkembangan Anda.' },
+      { title:'Perhatikan faktor keluarga', desc:'Jika ada riwayat diabetes, pertimbangkan pemeriksaan gula darah rutin.' },
+    ]
+    : [
+      { title:'Maintain healthy habits', desc:'Keep your diet, activity, and body weight consistent to keep risk controlled.' },
+      { title:'Retake the test periodically', desc:'Repeat screening in 6-12 months or when your health condition changes.' },
+      { title:'Save this result for tracking', desc:'Use this result as a baseline to compare your progress over time.' },
+      { title:'Watch family risk factors', desc:'If you have family history, consider routine blood glucose checks.' },
+    ];
+
+  const combined = [...mappedRecs];
+  fallback.forEach(item => {
+    if(combined.length < 4 && !combined.some(existing => existing.title === item.title)) combined.push(item);
+  });
+  return combined.slice(0, 4);
+}
+
+function renderPriorityRecommendations(items) {
+  return items.map((item, idx) => `
+    <div class="priority-item">
+      <div class="priority-icon">${idx + 1}</div>
+      <div>
+        <h4>${item.title}</h4>
+        <p>${item.desc}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
 function buildResults() {
   const total = scores.reduce((a,b)=>a+b,0);
   let riskClass, riskLabel, riskLabelId, message, messageId, prob;
@@ -1994,6 +2209,67 @@ function buildResults() {
     de:'Your risk is low. Continue maintaining a healthy diet, regular exercise, and retest in 1 year.'
   });
 
+  const priorityRecs = getPriorityRecommendations(total, recs, isHighRisk);
+  document.getElementById('score-display').className = 'score-display '+riskClass;
+  document.getElementById('score-display').innerHTML = `
+    <div class="result-summary-grid">
+      <div class="score-panel">
+        <div class="score-circle" style="background:transparent">
+          <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" style="width:180px;height:180px;position:absolute;inset:0;transform:rotate(-90deg)">
+            <circle cx="70" cy="70" r="60" fill="none" stroke="#e5e7eb" stroke-width="10"/>
+            <circle cx="70" cy="70" r="60" fill="none"
+              stroke="${total>20?'#7f0000':total>14?'#B22020':total>11?'#C45A1A':total>7?'#d4a017':'#0E7C5B'}"
+              stroke-width="10" stroke-dasharray="${dashArray} ${circumference}"
+              stroke-linecap="round" id="score-arc"/>
+          </svg>
+          <div class="score-circle-inner">
+            <div class="score-big" id="score-counter">0</div>
+            <div class="score-of">/ 26</div>
+          </div>
+        </div>
+        <div class="risk-badge">${lang==='id'?riskLabelId:riskLabel}</div>
+        <p class="risk-message">${lang==='id'?messageId:message}</p>
+        <div class="risk-probability">
+          ${lang==='id'?'Probabilitas 10 tahun':'10-Year Probability'}: <strong>${prob}</strong>
+        </div>
+        <div class="score-meter">
+          <div class="meter-track">
+            <div class="meter-segments">
+              <div class="meter-seg" style="width:27%;background:#0E7C5B"></div>
+              <div class="meter-seg" style="width:15%;background:#d4a017"></div>
+              <div class="meter-seg" style="width:12%;background:#C45A1A"></div>
+              <div class="meter-seg" style="width:23%;background:#B22020"></div>
+              <div class="meter-seg" style="width:23%;background:#7f0000"></div>
+            </div>
+            <div class="meter-pointer" style="left:${(total/26*100).toFixed(1)}%"></div>
+          </div>
+          <div class="meter-labels">
+            <span class="meter-label">0</span>
+            <span class="meter-label">7</span>
+            <span class="meter-label">11</span>
+            <span class="meter-label">14</span>
+            <span class="meter-label">20</span>
+            <span class="meter-label">26</span>
+          </div>
+        </div>
+      </div>
+      <div class="priority-panel">
+        <div>
+          <div class="priority-eyebrow">${lang==='id'?'Prioritas Anda':'Your Priority'}</div>
+          <h3>${lang==='id'?'Langkah yang Disarankan':'Recommended Next Steps'}</h3>
+          <p>${lang==='id'?'Fokus pada langkah paling penting dulu agar hasil tes ini mudah ditindaklanjuti.':'Focus on the most important actions first so this result is easier to follow up.'}</p>
+        </div>
+        <div class="priority-list">
+          ${renderPriorityRecommendations(priorityRecs)}
+        </div>
+        <div class="result-summary-actions">
+          <button class="btn-outline" onclick="scrollToDetailRecommendations()">${lang==='id'?'Lihat Detail Rekomendasi':'View Recommendation Details'}</button>
+          <button class="btn-cta-sm" onclick="window.exportLatestResultPDF()">${lang==='id'?'Download Hasil PDF':'Download Result PDF'}</button>
+        </div>
+      </div>
+    </div>
+  `;
+
   recs.forEach(rec => {
     const div = document.createElement('div');
     div.className = 'rec-item';
@@ -2006,6 +2282,34 @@ function buildResults() {
     `;
     recsList.appendChild(div);
   });
+
+  window.latestResultAttemptId = `${Date.now()}-${total}-${scores.join('-')}`;
+  window.latestResultSaved = false;
+  window.latestResultData = {
+    score: total,
+    maxScore: 26,
+    riskLevel: lang==='id'?riskLabelId:riskLabel,
+    riskClass,
+    riskMessage: lang==='id'?messageId:message,
+    probability: prob,
+    answers: questions.map((q, idx) => {
+      const opts = q.optionsByGender ? q.optionsByGender[gender] : q.options;
+      const selectedIndex = answers[idx];
+      const selectedOption = opts?.[selectedIndex];
+      return {
+        key: q.key,
+        question: q.q[lang],
+        selectedIndex,
+        answer: selectedOption ? selectedOption[lang] : '',
+        score: scores[idx] || 0
+      };
+    }),
+    recommendations: recs.map(rec => ({
+      title: lang==='id'?rec.t:rec.e,
+      description: lang==='id'?rec.d:rec.de
+    }))
+  };
+  window.handleResultReady?.(window.latestResultData);
 
   // Upsell (COMMENTED OUT)
   /*
@@ -2080,6 +2384,12 @@ function showToast(msg) {
   t.textContent = msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 2800);
 }
+window.exportLatestResultPDF = window.exportLatestResultPDF || (() => showToast('Fitur export belum siap.'));
+window.handleAuthLogin = window.handleAuthLogin || (() => showToast('Firebase belum siap.'));
+window.handleAuthRegister = window.handleAuthRegister || (() => showToast('Firebase belum siap.'));
+window.handleAuthLogout = window.handleAuthLogout || (() => showToast('Firebase belum siap.'));
+window.renderHistoryPage = window.renderHistoryPage || (() => {});
 </script>
+<script type="module" src="./app.js"></script>
 </body>
 </html>
