@@ -836,6 +836,7 @@
     .lang-toggle { display:none; }
     .btn-cta-sm { display:none; }
     .auth-chip { display:none; }
+    #mobile-masuk-btn { display:block; }
     .result-summary-actions .btn-cta-sm { display:inline-flex; }
     .score-display { padding:18px; }
     .score-panel, .priority-panel { padding:18px; }
@@ -902,9 +903,9 @@
       <!-- <a class="mobile-drawer-link" onclick="showPage('program');closeDrawer()" data-t="nav_program">📋 Program</a> -->
       <a class="mobile-drawer-link" onclick="showPage('about');closeDrawer()" data-t="nav_about">ℹ️ Tentang</a>
     </div>
-    
     <a class="mobile-drawer-link" onclick="showPage('history');closeDrawer()">Riwayat Hasil</a>
     <div class="mobile-auth-email" id="mobile-auth-email">Belum login</div>
+    <button class="auth-chip" id="mobile-masuk-btn" style="margin:8px 16px;width:calc(100% - 32px)" onclick="showPage('history');closeDrawer()">Masuk</button>
 
     <div class="mobile-drawer-lang">
       <div class="lang-toggle" style="justify-content:center;width:100%">

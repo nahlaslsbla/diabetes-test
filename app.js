@@ -63,6 +63,8 @@ function updateAuthUI() {
   if (emailText) emailText.textContent = currentUser?.email || "-";
   if (navChip) navChip.textContent = currentUser ? "Riwayat" : "Masuk";
   if (mobileEmail) mobileEmail.textContent = currentUser?.email || "Belum login";
+  const mobileMasuk = document.getElementById("mobile-masuk-btn");
+  if (mobileMasuk) mobileMasuk.style.display = currentUser ? "none" : "";
 }
 
 async function handleAuthAction(action) {
