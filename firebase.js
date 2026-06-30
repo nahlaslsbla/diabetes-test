@@ -3,13 +3,12 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDvs9Zb3ID2MN4yEl2dPhe14vWJQUFDNJk",
-  authDomain: "diabetes-checker-165c1.firebaseapp.com",
-  projectId: "diabetes-checker-165c1",
-  storageBucket: "diabetes-checker-165c1.firebasestorage.app",
-  messagingSenderId: "307691990161",
-  appId: "1:307691990161:web:34ce827ecafc0a3ddba330",
-  measurementId: "G-N2L67W5Y1N"
+  apiKey: "AIzaSyCzukOEygm_1Kj30oqdkCplCUKirGJB4sw",
+  authDomain: "diabetes-e7e1b.firebaseapp.com",
+  projectId: "diabetes-e7e1b",
+  storageBucket: "diabetes-e7e1b.firebasestorage.app",
+  messagingSenderId: "591658083588",
+  appId: "1:591658083588:web:bf5bf9cacafda8805c1c51"
 };
 
 export const app = initializeApp(firebaseConfig);

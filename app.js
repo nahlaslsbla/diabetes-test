@@ -127,6 +127,11 @@ function renderHistoryEmpty(message) {
   if (list) list.innerHTML = "";
 }
 
+function removeHistoryState() {
+  const state = document.getElementById("history-state");
+  if (state) state.remove();
+}
+
 async function renderHistoryPage() {
   updateAuthUI();
 
@@ -149,7 +154,7 @@ async function renderHistoryPage() {
       return;
     }
 
-    if (state) state.textContent = "";
+    removeHistoryState();
     if (list) {
       list.innerHTML = results.map((item) => `
         <div class="history-card">

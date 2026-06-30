@@ -246,7 +246,7 @@ function drawRecommendations(doc, recommendations, y) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     setTextColor(doc, COLORS.white);
-    doc.text(String(index + 1), PAGE.margin + 6.7, y + 12.5);
+    doc.text(String(index + 1), PAGE.margin + 8, y + 11.5, { align: "center" });
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
