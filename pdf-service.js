@@ -272,44 +272,102 @@ function drawDecisionPathSteps(doc, path, y) {
   return y;
 }
 
-function drawTreeNodePdf(doc, node, edgeLabel, depth, y) {
-  const indent = PAGE.margin + (depth * 5);
-  const maxWidth = PAGE.width - PAGE.margin - indent;
+function lighten(color, amount = 0.82) {
+  return color.map((c) => Math.round(c + ((255 - c) * amount)));
+}
 
-  if (edgeLabel) {
-    const prefix = node.isOnPath ? "-> " : "";
-    const lines = doc.splitTextToSize(sanitizeText(`${prefix}${edgeLabel}`), maxWidth);
-    y = ensureSpace(doc, y, (lines.length * 4.3) + 1);
-    doc.setFont("helvetica", node.isOnPath ? "bold" : "normal");
-    doc.setFontSize(7.6);
-    setTextColor(doc, node.isOnPath ? COLORS.blue : COLORS.muted);
-    lines.forEach((line, index) => doc.text(line, indent, y + (index * 4.3)));
-    y += (lines.length * 4.3) + 1;
-  }
+function drawTreeLegend(doc, y) {
+  const items = [
+    { label: "Jalur Anda", color: COLORS.blue },
+    { label: "Rendah", color: COLORS.teal },
+    { label: "Sedikit Meningkat", color: COLORS.yellow },
+    { label: "Sedang", color: COLORS.amber },
+    { label: "Tinggi", color: COLORS.red },
+    { label: "Sangat Tinggi", color: COLORS.redDark }
+  ];
 
-  if (node.type === "leaf") {
-    const prefix = node.isCurrentResult ? "* " : "- ";
-    const suffix = node.isCurrentResult ? " (Hasil Anda)" : "";
-    const lines = doc.splitTextToSize(sanitizeText(`${prefix}${node.label} (n=${node.count})${suffix}`), maxWidth);
-    y = ensureSpace(doc, y, (lines.length * 4.3) + 3);
-    doc.setFont("helvetica", node.isCurrentResult ? "bold" : "normal");
-    doc.setFontSize(7.6);
-    setTextColor(doc, node.isCurrentResult ? COLORS.blue : COLORS.text);
-    lines.forEach((line, index) => doc.text(line, indent, y + (index * 4.3)));
-    return y + (lines.length * 4.3) + 3;
-  }
+  y = ensureSpace(doc, y, 8);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(6.8);
 
-  const lines = doc.splitTextToSize(sanitizeText(`${node.attributeLabel} (Gain Ratio ${node.gainRatio.toFixed(3)})`), maxWidth);
-  y = ensureSpace(doc, y, (lines.length * 4.3) + 1);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(7.8);
-  setTextColor(doc, node.isOnPath ? COLORS.blue : COLORS.text);
-  lines.forEach((line, index) => doc.text(line, indent, y + (index * 4.3)));
-  y += (lines.length * 4.3) + 1.5;
-
-  node.children.forEach((edge) => {
-    y = drawTreeNodePdf(doc, edge.node, edge.edgeLabel, depth + 1, y);
+  let x = PAGE.margin;
+  items.forEach((item) => {
+    setFillColor(doc, item.color);
+    doc.circle(x + 1.2, y - 1, 1.2, "F");
+    setTextColor(doc, COLORS.muted);
+    const label = sanitizeText(item.label);
+    doc.text(label, x + 4, y);
+    x += 4 + doc.getTextWidth(label) + 6;
   });
+
+  return y + 7;
+}
+
+// Draws each node/leaf as a rounded "pill", mimicking the on-page tree-view's
+// boxes instead of a flat indented text list. Hierarchy is conveyed by
+// indentation and the edge-label caption above each pill.
+function drawTreeNodePdf(doc, node, edgeLabel, depth, y) {
+  const indent = PAGE.margin + (depth * 10);
+  const maxWidth = Math.max(30, PAGE.width - PAGE.margin - indent);
+
+  const captionLines = edgeLabel ? doc.splitTextToSize(sanitizeText(edgeLabel), maxWidth) : [];
+  const captionHeight = captionLines.length ? (captionLines.length * 3.4) + 2 : 0;
+
+  const isLeaf = node.type === "leaf";
+  const isOnPath = Boolean(node.isOnPath);
+  const riskColor = isLeaf ? (DT_RISK_COLORS[node.label] || COLORS.blue) : null;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.4);
+  const labelText = isLeaf
+    ? `${node.label} (n=${node.count})${node.isCurrentResult ? " · HASIL ANDA" : ""}`
+    : `${node.attributeLabel} · Gain Ratio ${node.gainRatio.toFixed(3)}`;
+  const textLines = doc.splitTextToSize(sanitizeText(labelText), maxWidth - 8);
+  const textWidth = Math.max(0, ...textLines.map((line) => doc.getTextWidth(line)));
+  const boxHeight = Math.max(7.5, (textLines.length * 3.8) + 3.4);
+  const boxWidth = Math.min(maxWidth, textWidth + 8);
+
+  y = ensureSpace(doc, y, captionHeight + boxHeight + 3);
+
+  if (captionLines.length) {
+    doc.setFont("helvetica", isOnPath ? "bold" : "italic");
+    doc.setFontSize(6.6);
+    setTextColor(doc, isOnPath ? COLORS.blue : COLORS.muted);
+    captionLines.forEach((line, index) => doc.text(line, indent, y + (index * 3.4)));
+    y += captionHeight;
+  }
+
+  const boxTop = y;
+
+  let fill;
+  let border;
+  let textColor;
+  if (isLeaf) {
+    fill = node.isCurrentResult ? riskColor : lighten(riskColor);
+    border = riskColor;
+    textColor = node.isCurrentResult ? COLORS.white : riskColor;
+  } else {
+    fill = isOnPath ? lighten(COLORS.blue, 0.86) : COLORS.bg;
+    border = isOnPath ? COLORS.blue : COLORS.border;
+    textColor = isOnPath ? COLORS.blueDark : COLORS.text;
+  }
+
+  setFillColor(doc, fill);
+  setDrawColor(doc, border);
+  doc.roundedRect(indent, boxTop, boxWidth, boxHeight, boxHeight / 2.4, boxHeight / 2.4, "FD");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.4);
+  setTextColor(doc, textColor);
+  textLines.forEach((line, index) => doc.text(line, indent + 4, boxTop + 4.6 + (index * 3.8)));
+
+  y = boxTop + boxHeight + 3;
+
+  if (!isLeaf) {
+    node.children.forEach((edge) => {
+      y = drawTreeNodePdf(doc, edge.node, edge.edgeLabel, depth + 1, y);
+    });
+  }
 
   return y;
 }
@@ -317,7 +375,7 @@ function drawTreeNodePdf(doc, node, edgeLabel, depth, y) {
 function drawDecisionTreeDiagram(doc, tree, y) {
   if (!tree) return y;
 
-  y = ensureSpace(doc, y, 20);
+  y = ensureSpace(doc, y, 24);
   y = drawSectionTitle(doc, "Pohon keputusan (jalur Anda ditandai)", y);
 
   doc.setFont("helvetica", "normal");
@@ -330,8 +388,9 @@ function drawDecisionTreeDiagram(doc, tree, y) {
     y,
     PAGE.width - (PAGE.margin * 2),
     4
-  ) + 5;
+  ) + 3;
 
+  y = drawTreeLegend(doc, y);
   y = drawTreeNodePdf(doc, tree, null, 0, y);
 
   return y + 4;

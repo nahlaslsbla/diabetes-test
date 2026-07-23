@@ -201,7 +201,7 @@ async function renderHistoryPage() {
 async function ensureDecisionAnalysisAttached(resultData) {
   if (resultData.decisionAnalysis) return;
   try {
-    const { bundle, pathResult } = await computePersonalPathAndBundle(resultData);
+    const { bundle, pathResult } = await getDecisionComputation(resultData);
     resultData.decisionPath = pathResult;
     resultData.decisionAnalysis = buildDecisionAnalysisData(bundle, pathResult);
   } catch (error) {
@@ -220,6 +220,7 @@ async function exportLatestResult() {
       decisionAnalysis: window.latestResultData?.decisionAnalysis || null
     };
     await ensureDecisionAnalysisAttached(resultData);
+    console.log("resultDatav2 ", resultData);
     exportResultToPDF(resultData);
   } catch (error) {
     showAppToast(error.message || "Gagal export PDF.");
@@ -231,6 +232,7 @@ async function exportHistoryResult(resultId) {
     const resultData = historyResults[resultId];
     if (!resultData) throw new Error("Data riwayat tidak ditemukan.");
     await ensureDecisionAnalysisAttached(resultData);
+    console.log("resultDatav2 ", resultData);
     exportResultToPDF(resultData);
   } catch (error) {
     showAppToast(error.message || "Gagal export PDF.");
@@ -324,6 +326,24 @@ async function computePersonalPathAndBundle(resultData) {
   }
   const pathResult = traceDecisionPath(bundle.tree, resultData.answers);
   return { bundle, pathResult };
+}
+
+// Memoizes the (async) decision-tree computation directly on the resultData
+// object, so every caller working off the same result — the on-page render
+// AND a later PDF export — awaits the exact same in-flight/completed fetch
+// instead of each kicking off its own independent Firestore round trip.
+// Without this, exportLatestResult()'s shallow copy of window.latestResultData
+// triggers a second, redundant computation; if that second one hits a
+// transient failure while the first (on-page) one already succeeded, the
+// page shows the full analysis but the exported PDF silently loses it.
+function getDecisionComputation(resultData) {
+  if (!resultData.__decisionComputation) {
+    resultData.__decisionComputation = computePersonalPathAndBundle(resultData).catch((error) => {
+      resultData.__decisionComputation = null;
+      throw error;
+    });
+  }
+  return resultData.__decisionComputation;
 }
 
 function isRuleOnPath(rule, pathSteps) {
@@ -491,7 +511,7 @@ async function renderResultDecisionPathSection(resultData) {
   contentEl.style.display = "none";
 
   try {
-    const { bundle, pathResult } = await computePersonalPathAndBundle(resultData);
+    const { bundle, pathResult } = await getDecisionComputation(resultData);
     resultData.decisionPath = pathResult;
     resultData.decisionAnalysis = buildDecisionAnalysisData(bundle, pathResult);
     contentEl.innerHTML = renderFullDecisionSection(bundle, pathResult);
