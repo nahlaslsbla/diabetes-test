@@ -204,8 +204,9 @@ async function ensureDecisionAnalysisAttached(resultData) {
     const { bundle, pathResult } = await computePersonalPathAndBundle(resultData);
     resultData.decisionPath = pathResult;
     resultData.decisionAnalysis = buildDecisionAnalysisData(bundle, pathResult);
-  } catch {
+  } catch (error) {
     // No training data / no answers — PDF just renders without this section.
+    console.error("Gagal melampirkan analisis decision tree ke PDF:", error);
   }
 }
 
@@ -378,13 +379,47 @@ function renderDecisionResultBadge(pathResult) {
   `;
 }
 
+// Mirrors renderTreeNode()'s path-highlighting logic but produces a plain
+// object (attribute/value labels already resolved to text) instead of HTML,
+// so pdf-service.js can draw the same "jalur Anda ditandai" tree without
+// importing c45.js.
+function buildPlainTree(node, isOnPath, pathSteps, stepIndex) {
+  if (node.type === "leaf") {
+    return {
+      type: "leaf",
+      label: node.label,
+      count: node.count,
+      isOnPath,
+      isCurrentResult: Boolean(isOnPath && pathSteps && stepIndex === pathSteps.length)
+    };
+  }
+
+  const currentStep = isOnPath && pathSteps ? pathSteps[stepIndex] : null;
+  const children = Object.entries(node.children).map(([value, child]) => {
+    const childOnPath = Boolean(currentStep) && String(currentStep.value) === String(value);
+    return {
+      edgeLabel: `${attributeLabel(node.attribute)} = "${valueLabel(node.attribute, value)}"`,
+      node: buildPlainTree(child, childOnPath, pathSteps, childOnPath ? stepIndex + 1 : stepIndex)
+    };
+  });
+
+  return {
+    type: "node",
+    attributeLabel: attributeLabel(node.attribute),
+    gainRatio: node.gainRatio,
+    isOnPath,
+    children
+  };
+}
+
 // Plain-object version of the analysis (no HTML), for pdf-service.js to consume
 // without needing to import c45.js. Shares the same underlying computations as
-// renderFullDecisionSection() (rules, importance, distribution) but formatted
-// for the PDF's simpler layout needs.
+// renderFullDecisionSection() (tree, rules, importance, distribution) but
+// formatted for the PDF's simpler layout needs.
 function buildDecisionAnalysisData(bundle, pathResult) {
   const { splitLog, rows, rowCount, trainingCount, userCount, tree } = bundle;
   const rules = treeToRules(tree);
+  const plainTree = buildPlainTree(tree, Boolean(pathResult.steps), pathResult.steps, 0);
 
   const importanceMap = computeFeatureImportance(splitLog, rowCount);
   const importanceEntries = Object.entries(importanceMap).sort((a, b) => b[1] - a[1]);
@@ -414,7 +449,7 @@ function buildDecisionAnalysisData(bundle, pathResult) {
     pct: rowCount > 0 ? (count / rowCount) * 100 : 0
   }));
 
-  return { rowCount, trainingCount, userCount, path: pathResult, rules: rulesFormatted, importance, distribution };
+  return { rowCount, trainingCount, userCount, path: pathResult, rules: rulesFormatted, importance, distribution, tree: plainTree };
 }
 
 function renderFullDecisionSection(bundle, pathResult) {

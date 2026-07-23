@@ -2193,13 +2193,17 @@ function prevQuestion() {
   if(currentQ>0) { currentQ--; renderQuestion(); }
 }
 
+let resultsInFlight = false;
 function showLoadingAndResults() {
+  if(resultsInFlight) return;
+  resultsInFlight = true;
   const ls = document.getElementById('loading-screen');
   ls.style.display='flex';
   setTimeout(()=>{
     ls.style.display='none';
     buildResults();
     showPage('results');
+    resultsInFlight = false;
   }, 1800);
 }
 

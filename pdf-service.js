@@ -272,6 +272,71 @@ function drawDecisionPathSteps(doc, path, y) {
   return y;
 }
 
+function drawTreeNodePdf(doc, node, edgeLabel, depth, y) {
+  const indent = PAGE.margin + (depth * 5);
+  const maxWidth = PAGE.width - PAGE.margin - indent;
+
+  if (edgeLabel) {
+    const prefix = node.isOnPath ? "-> " : "";
+    const lines = doc.splitTextToSize(sanitizeText(`${prefix}${edgeLabel}`), maxWidth);
+    y = ensureSpace(doc, y, (lines.length * 4.3) + 1);
+    doc.setFont("helvetica", node.isOnPath ? "bold" : "normal");
+    doc.setFontSize(7.6);
+    setTextColor(doc, node.isOnPath ? COLORS.blue : COLORS.muted);
+    lines.forEach((line, index) => doc.text(line, indent, y + (index * 4.3)));
+    y += (lines.length * 4.3) + 1;
+  }
+
+  if (node.type === "leaf") {
+    const prefix = node.isCurrentResult ? "* " : "- ";
+    const suffix = node.isCurrentResult ? " (Hasil Anda)" : "";
+    const lines = doc.splitTextToSize(sanitizeText(`${prefix}${node.label} (n=${node.count})${suffix}`), maxWidth);
+    y = ensureSpace(doc, y, (lines.length * 4.3) + 3);
+    doc.setFont("helvetica", node.isCurrentResult ? "bold" : "normal");
+    doc.setFontSize(7.6);
+    setTextColor(doc, node.isCurrentResult ? COLORS.blue : COLORS.text);
+    lines.forEach((line, index) => doc.text(line, indent, y + (index * 4.3)));
+    return y + (lines.length * 4.3) + 3;
+  }
+
+  const lines = doc.splitTextToSize(sanitizeText(`${node.attributeLabel} (Gain Ratio ${node.gainRatio.toFixed(3)})`), maxWidth);
+  y = ensureSpace(doc, y, (lines.length * 4.3) + 1);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.8);
+  setTextColor(doc, node.isOnPath ? COLORS.blue : COLORS.text);
+  lines.forEach((line, index) => doc.text(line, indent, y + (index * 4.3)));
+  y += (lines.length * 4.3) + 1.5;
+
+  node.children.forEach((edge) => {
+    y = drawTreeNodePdf(doc, edge.node, edge.edgeLabel, depth + 1, y);
+  });
+
+  return y;
+}
+
+function drawDecisionTreeDiagram(doc, tree, y) {
+  if (!tree) return y;
+
+  y = ensureSpace(doc, y, 20);
+  y = drawSectionTitle(doc, "Pohon keputusan (jalur Anda ditandai)", y);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.6);
+  setTextColor(doc, COLORS.muted);
+  y = writeLines(
+    doc,
+    "Jalur berwarna biru menunjukkan bagaimana hasil ini ditelusuri melalui pohon keputusan C4.5.",
+    PAGE.margin,
+    y,
+    PAGE.width - (PAGE.margin * 2),
+    4
+  ) + 5;
+
+  y = drawTreeNodePdf(doc, tree, null, 0, y);
+
+  return y + 4;
+}
+
 function drawImportanceBars(doc, importance, y) {
   if (!importance?.length) return y;
 
@@ -400,6 +465,7 @@ function drawDecisionAnalysis(doc, resultData, y) {
     : "Jalur berikut menunjukkan bagaimana algoritma C4.5 mengklasifikasikan hasil ini.";
   y = writeLines(doc, introText, PAGE.margin, y, PAGE.width - (PAGE.margin * 2), 4.5) + 6;
 
+  y = drawDecisionTreeDiagram(doc, analysis?.tree, y);
   y = drawDecisionPathSteps(doc, path, y);
 
   if (!analysis) return y + 4;
