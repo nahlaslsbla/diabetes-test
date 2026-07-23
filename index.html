@@ -878,7 +878,7 @@
       <button class="lang-btn active" id="btn-id" onclick="setLang('id')">ID</button>
       <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
     </div>
-    <button class="auth-chip" id="nav-auth-chip" onclick="showPage('history')">Masuk</button>
+    <button class="auth-chip" id="nav-auth-chip" onclick="handleAuthChipClick()">Masuk</button>
     <a href="#" class="btn-cta-sm" onclick="showPage('test')">
       <span data-t="nav_cta">Mulai Tes</span> →
     </a>
@@ -905,7 +905,7 @@
     </div>
     <a class="mobile-drawer-link" onclick="showPage('history');closeDrawer()">Riwayat Hasil</a>
     <div class="mobile-auth-email" id="mobile-auth-email">Belum login</div>
-    <button class="auth-chip" id="mobile-masuk-btn" style="margin:8px 16px;width:calc(100% - 32px)" onclick="showPage('history');closeDrawer()">Masuk</button>
+    <button class="auth-chip" id="mobile-masuk-btn" style="margin:8px 16px;width:calc(100% - 32px)" onclick="handleAuthChipClick();closeDrawer()">Masuk</button>
 
     <div class="mobile-drawer-lang">
       <div class="lang-toggle" style="justify-content:center;width:100%">
@@ -1314,41 +1314,52 @@
 
 <!-- ═══════════════ PROGRAM PAGE ═══════════════ -->
 <!-- HISTORY PAGE -->
+<div class="page" id="page-auth">
+  <div class="static-page">
+    <div class="static-hero">
+      <h1>Masuk atau Daftar</h1>
+      <p>Login untuk memulai tes dan menyimpan hasil FINDRISC Anda.</p>
+    </div>
+    <div class="static-content" style="max-width:480px">
+      <div class="auth-card">
+        <div id="auth-guest-box">
+          <h2>Masuk atau daftar</h2>
+          <p>Buat akun gratis atau masuk untuk memulai tes risiko diabetes.</p>
+          <div class="auth-form">
+            <input class="auth-input" id="auth-email" type="email" autocomplete="email" placeholder="Email">
+            <input class="auth-input" id="auth-password" type="password" autocomplete="current-password" placeholder="Password minimal 6 karakter">
+            <div class="auth-actions">
+              <button class="btn-outline auth-submit" id="auth-login-btn" onclick="window.handleAuthLogin()">Login</button>
+              <button class="btn-outline" id="auth-register-btn" onclick="window.handleAuthRegister()">Daftar</button>
+            </div>
+          </div>
+        </div>
+        <div id="auth-user-box" style="display:none">
+          <h2>Akun aktif</h2>
+          <p>Hasil tes baru akan otomatis tersimpan ke riwayat.</p>
+          <div class="auth-user-email" id="auth-current-email">-</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+            <button class="btn-primary" onclick="showPage('test')" style="flex:1">Mulai Tes →</button>
+            <button class="btn-outline" id="auth-logout-btn" onclick="window.handleAuthLogout()">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="page" id="page-history">
   <div class="static-page">
     <div class="static-hero">
       <h1>Riwayat Hasil</h1>
       <p>Simpan dan lihat kembali hasil tes FINDRISC Anda.</p>
     </div>
-    <div class="static-content" style="max-width:1120px">
-      <div class="auth-layout">
-        <div class="auth-card">
-          <div id="auth-guest-box">
-            <h2>Masuk atau daftar</h2>
-            <p>Login untuk menyimpan hasil tes dan melihat riwayat Anda.</p>
-            <div class="auth-form">
-              <input class="auth-input" id="auth-email" type="email" autocomplete="email" placeholder="Email">
-              <input class="auth-input" id="auth-password" type="password" autocomplete="current-password" placeholder="Password minimal 6 karakter">
-              <div class="auth-actions">
-                <button class="btn-outline auth-submit" id="auth-login-btn" onclick="window.handleAuthLogin()">Login</button>
-                <button class="btn-outline" id="auth-register-btn" onclick="window.handleAuthRegister()">Register</button>
-              </div>
-            </div>
-          </div>
-          <div id="auth-user-box" style="display:none">
-            <h2>Akun aktif</h2>
-            <p>Hasil tes baru akan otomatis tersimpan ke riwayat.</p>
-            <div class="auth-user-email" id="auth-current-email">-</div>
-            <button class="btn-outline" id="auth-logout-btn" onclick="window.handleAuthLogout()">Logout</button>
-          </div>
-        </div>
-
-        <div class="history-panel">
-          <h2>Riwayat tes tersimpan</h2>
-          <p>Riwayat hanya menampilkan hasil milik akun yang sedang login.</p>
-          <div class="history-state" id="history-state">Silakan login untuk melihat riwayat hasil tes.</div>
-          <div class="history-list" id="history-list"></div>
-        </div>
+    <div class="static-content" style="max-width:800px">
+      <div class="history-panel">
+        <h2>Riwayat tes tersimpan</h2>
+        <p>Riwayat hanya menampilkan hasil milik akun yang sedang login.</p>
+        <div class="history-state" id="history-state">Silakan login untuk melihat riwayat hasil tes.</div>
+        <div class="history-list" id="history-list"></div>
       </div>
     </div>
   </div>
@@ -1862,12 +1873,20 @@ function applyLang() {
 
 // ────────── PAGE NAVIGATION ──────────
 function showPage(page) {
+  if(page === 'test' && !window.currentUser) {
+    showToast('Silakan login atau daftar terlebih dahulu.');
+    page = 'auth';
+  }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const targetPage = document.getElementById('page-'+page);
   if(!targetPage) return;
   targetPage.classList.add('active');
   if(page === 'history') window.renderHistoryPage?.();
   window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function handleAuthChipClick() {
+  showPage(window.currentUser ? 'history' : 'auth');
 }
 
 // ────────── MOBILE DRAWER ──────────

@@ -78,6 +78,7 @@ async function handleAuthAction(action) {
       await loginUser(email, password);
       showAppToast("Login berhasil.");
     }
+    window.showPage?.("test");
   } catch (error) {
     showAppToast(error.message || "Terjadi kesalahan. Coba lagi.");
   } finally {
@@ -209,6 +210,7 @@ window.exportHistoryResult = exportHistoryResult;
 
 watchAuthState((user) => {
   currentUser = user;
+  window.currentUser = user;
   updateAuthUI();
   if (document.getElementById("page-history")?.classList.contains("active")) {
     renderHistoryPage();
