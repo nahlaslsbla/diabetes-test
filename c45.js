@@ -204,3 +204,69 @@ export function ruleToString(rule) {
   const ifPart = conditions || "(semua data)";
   return `IF ${ifPart} THEN Risiko = ${rule.label} (n=${rule.count})`;
 }
+
+/**
+ * Walks a single FINDRISC result's own answers down the trained tree,
+ * recording the attribute/value taken at each split, and returns the leaf
+ * classification it lands on. Used to show a per-result "here's how the
+ * C4.5 tree classifies this specific answer set" breakdown (screen + PDF).
+ *
+ * `answers` is the `resultData.answers[]` array saved by the app — each
+ * entry's `score` is the FINDRISC point value, which matches the point-code
+ * encoding used in the training_data collection, so no relabeling is needed.
+ *
+ * If the exact combination of values wasn't seen in training data at some
+ * node (no matching child branch), tracing stops there and falls back to
+ * that node's majority class — flagged via `isFallback: true`.
+ */
+export function traceDecisionPath(tree, answers) {
+  const flatMap = {};
+  (Array.isArray(answers) ? answers : []).forEach((a) => {
+    flatMap[a.key] = a.score;
+  });
+
+  const steps = [];
+  let node = tree;
+
+  while (node && node.type === "node") {
+    const rawValue = flatMap[node.attribute];
+    const child = node.children[rawValue];
+
+    steps.push({
+      attribute: node.attribute,
+      attributeLabel: ATTRIBUTE_LABELS[node.attribute] || node.attribute,
+      value: rawValue,
+      valueLabel: valueLabel(node.attribute, rawValue),
+      gainRatio: node.gainRatio
+    });
+
+    if (!child) {
+      return { steps, finalLabel: node.majorityLabel, finalCount: node.count, isFallback: true };
+    }
+    node = child;
+  }
+
+  if (!node) {
+    return { steps, finalLabel: "-", finalCount: 0, isFallback: true };
+  }
+
+  return { steps, finalLabel: node.label, finalCount: node.count, isFallback: false };
+}
+
+/**
+ * Aggregates each attribute's contribution across every split in the tree
+ * (weighted by how many training rows passed through that split), giving a
+ * whole-tree "feature importance" rather than just the root split's Gain
+ * Ratio. Returns raw weighted-Gain-Ratio sums per attribute key — normalize
+ * to percentages at the call site for display.
+ */
+export function computeFeatureImportance(splitLog, totalRows) {
+  const importance = {};
+  for (const entry of splitLog) {
+    const winner = entry.candidates[0];
+    if (!winner) continue;
+    const weight = totalRows > 0 ? entry.sampleCount / totalRows : 0;
+    importance[winner.attribute] = (importance[winner.attribute] || 0) + winner.gainRatio * weight;
+  }
+  return importance;
+}
