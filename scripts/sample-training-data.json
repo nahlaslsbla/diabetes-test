@@ -1,0 +1,68 @@
+[
+  {
+    "age": 0,
+    "bmi": 0,
+    "waist": 0,
+    "activity": 0,
+    "diet": 0,
+    "bp_meds": 0,
+    "glucose_history": 0,
+    "family_history": 0,
+    "riskLevel": "Rendah"
+  },
+  {
+    "age": 2,
+    "bmi": 1,
+    "waist": 3,
+    "activity": 2,
+    "diet": 1,
+    "bp_meds": 2,
+    "glucose_history": 0,
+    "family_history": 3,
+    "riskLevel": "Sedang"
+  },
+  {
+    "age": 3,
+    "bmi": 3,
+    "waist": 4,
+    "activity": 2,
+    "diet": 1,
+    "bp_meds": 2,
+    "glucose_history": 5,
+    "family_history": 5,
+    "riskLevel": "Tinggi"
+  },
+  {
+    "age": 4,
+    "bmi": 3,
+    "waist": 4,
+    "activity": 2,
+    "diet": 1,
+    "bp_meds": 2,
+    "glucose_history": 5,
+    "family_history": 5,
+    "riskLevel": "Sangat Tinggi"
+  },
+  {
+    "age": 0,
+    "bmi": 1,
+    "waist": 0,
+    "activity": 0,
+    "diet": 0,
+    "bp_meds": 0,
+    "glucose_history": 0,
+    "family_history": 0,
+    "riskLevel": "Sedikit Meningkat"
+  },
+  {
+    "age": 2,
+    "bmi": 0,
+    "waist": 0,
+    "activity": 0,
+    "diet": 0,
+    "bp_meds": 0,
+    "glucose_history": 0,
+    "family_history": 0,
+    "riskLevel": "Rendah"
+  }
+]

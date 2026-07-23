@@ -1,0 +1,12 @@
+{
+  "name": "diabetes-training-data-import",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only script to import the C4.5 training dataset into Firestore. Not part of the deployed website.",
+  "scripts": {
+    "import": "node import-training-data.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.6.0"
+  }
+}

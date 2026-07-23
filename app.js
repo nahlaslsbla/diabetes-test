@@ -10,6 +10,16 @@ import {
   saveResult
 } from "./result-service.js";
 import { exportResultToPDF } from "./pdf-service.js";
+import { getTrainingDataset } from "./training-data-service.js";
+import {
+  ATTRIBUTES,
+  ATTRIBUTE_LABELS,
+  TARGET_KEY,
+  buildTree,
+  treeToRules,
+  ruleToString,
+  valueLabel
+} from "./c45.js";
 
 let currentUser = null;
 let activeSaveAttemptId = null;
@@ -65,6 +75,10 @@ function updateAuthUI() {
   if (mobileEmail) mobileEmail.textContent = currentUser?.email || "Belum login";
   const mobileMasuk = document.getElementById("mobile-masuk-btn");
   if (mobileMasuk) mobileMasuk.style.display = currentUser ? "none" : "";
+  const navLogout = document.getElementById("nav-logout-btn");
+  if (navLogout) navLogout.style.display = currentUser ? "" : "none";
+  const mobileLogout = document.getElementById("mobile-logout-btn");
+  if (mobileLogout) mobileLogout.style.display = currentUser ? "" : "none";
 }
 
 async function handleAuthAction(action) {
@@ -200,6 +214,160 @@ function exportHistoryResult(resultId) {
   }
 }
 
+// ────────── ANALISIS DECISION TREE (C4.5) ──────────
+
+const RISK_DIST_COLORS = {
+  "Rendah": "var(--teal)",
+  "Sedikit Meningkat": "var(--yellow)",
+  "Sedang": "var(--amber)",
+  "Tinggi": "var(--red)",
+  "Sangat Tinggi": "var(--red)"
+};
+
+function attributeLabel(key) {
+  return ATTRIBUTE_LABELS[key] || key;
+}
+
+function renderAnalysisStats(rows) {
+  const total = rows.length;
+  const distribution = {};
+  for (const row of rows) {
+    const label = row[TARGET_KEY] || "-";
+    distribution[label] = (distribution[label] || 0) + 1;
+  }
+
+  const distCards = Object.entries(distribution)
+    .map(([label, count]) => `
+      <div class="analysis-stat-card">
+        <div class="stat-value">${count}</div>
+        <div class="stat-label">${label}</div>
+        <div class="analysis-dist-bar"><div class="analysis-dist-fill" style="width:${((count / total) * 100).toFixed(0)}%;background:${RISK_DIST_COLORS[label] || "var(--blue)"}"></div></div>
+      </div>
+    `)
+    .join("");
+
+  return `
+    <div class="analysis-stat-card">
+      <div class="stat-value">${total}</div>
+      <div class="stat-label">Total Data Pasien</div>
+    </div>
+    ${distCards}
+  `;
+}
+
+function renderTreeNode(node, edgeLabel) {
+  const edgeHtml = edgeLabel ? `<div class="tree-edge-label">${edgeLabel}</div>` : "";
+  if (node.type === "leaf") {
+    return `<li>${edgeHtml}<div class="tree-leaf-box">🍃 ${node.label} <span>(n=${node.count})</span></div></li>`;
+  }
+  const childrenHtml = Object.entries(node.children)
+    .map(([value, child]) => renderTreeNode(child, `${attributeLabel(node.attribute)} = "${valueLabel(node.attribute, value)}"`))
+    .join("");
+  return `
+    <li>
+      ${edgeHtml}
+      <div class="tree-node-box">🌳 ${attributeLabel(node.attribute)} <span>(Gain Ratio ${node.gainRatio.toFixed(3)})</span></div>
+      <ul class="tree-children">${childrenHtml}</ul>
+    </li>
+  `;
+}
+
+function renderAnalysisTree(tree) {
+  return `<ul class="tree-children tree-root">${renderTreeNode(tree, null)}</ul>`;
+}
+
+function renderGainTable(splitLog) {
+  if (!splitLog.length) {
+    return "<p>Tidak ada split — data pelatihan terlalu homogen untuk membentuk cabang.</p>";
+  }
+  return splitLog
+    .map(
+      (entry) => `
+      <div class="gain-node-block">
+        <h4>Node: ${entry.path} <span class="gain-node-meta">(n=${entry.sampleCount}, Entropy=${entry.entropy.toFixed(4)})</span></h4>
+        <div class="table-scroll">
+          <table class="analysis-table">
+            <thead><tr><th>Atribut</th><th>Information Gain</th><th>Split Information</th><th>Gain Ratio</th></tr></thead>
+            <tbody>
+              ${entry.candidates
+                .map(
+                  (c, i) => `
+                <tr class="${i === 0 ? "best-split" : ""}">
+                  <td>${attributeLabel(c.attribute)}</td>
+                  <td>${c.informationGain.toFixed(4)}</td>
+                  <td>${c.splitInformation.toFixed(4)}</td>
+                  <td>${c.gainRatio.toFixed(4)}</td>
+                </tr>
+              `
+                )
+                .join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+}
+
+function renderAnalysisRules(rules) {
+  const sorted = [...rules].sort((a, b) => b.count - a.count);
+  return sorted.map((rule) => `<li>${ruleToString(rule)}</li>`).join("");
+}
+
+function renderAnalysisConclusion(tree) {
+  if (tree.type === "leaf") {
+    return `<p>Data pelatihan terlalu homogen untuk membentuk percabangan (mayoritas pasien berada pada kategori risiko yang sama). Tambahkan variasi data pada <code>training_dataset</code> untuk mendapatkan pohon yang lebih informatif.</p>`;
+  }
+  return `<p>Berdasarkan nilai <strong>Gain Ratio</strong>, atribut yang paling berpengaruh terhadap risiko diabetes pada data pelatihan ini adalah <strong>${attributeLabel(tree.attribute)}</strong> (Gain Ratio = ${tree.gainRatio.toFixed(4)}), yang menjadi root node dari pohon keputusan.</p>`;
+}
+
+async function runDecisionTreeAnalysis() {
+  const btn = document.getElementById("analysis-run-btn");
+  const stateEl = document.getElementById("analysis-state");
+  const resultsEl = document.getElementById("analysis-results");
+
+  if (btn) btn.disabled = true;
+  if (resultsEl) resultsEl.style.display = "none";
+  if (stateEl) {
+    stateEl.style.display = "";
+    stateEl.textContent = "Mengambil training dataset dari Firebase...";
+  }
+
+  try {
+    const rows = await getTrainingDataset();
+
+    if (rows.length === 0) {
+      if (stateEl) stateEl.textContent = 'Training dataset belum tersedia di Firebase (koleksi "training_dataset" kosong). Import data terlebih dahulu.';
+      return;
+    }
+
+    if (stateEl) stateEl.textContent = `Menghitung Entropy, Information Gain, dan Gain Ratio dari ${rows.length} data...`;
+
+    const attributeKeys = ATTRIBUTES.map((a) => a.key);
+    const { tree, splitLog } = buildTree(rows, attributeKeys, { targetKey: TARGET_KEY });
+    const rules = treeToRules(tree);
+
+    document.getElementById("analysis-stats").innerHTML = renderAnalysisStats(rows);
+    document.getElementById("analysis-tree").innerHTML = renderAnalysisTree(tree);
+    document.getElementById("analysis-gain-table").innerHTML = renderGainTable(splitLog);
+    document.getElementById("analysis-rules").innerHTML = renderAnalysisRules(rules);
+    document.getElementById("analysis-conclusion").innerHTML = renderAnalysisConclusion(tree);
+
+    if (stateEl) stateEl.style.display = "none";
+    if (resultsEl) resultsEl.style.display = "block";
+    showAppToast("Analisis pohon keputusan berhasil dibuat.");
+  } catch (error) {
+    if (stateEl) {
+      stateEl.style.display = "";
+      stateEl.textContent = error.message || "Gagal menjalankan analisis.";
+    }
+    showAppToast(error.message || "Gagal menjalankan analisis.");
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
 window.handleAuthLogin = () => handleAuthAction("login");
 window.handleAuthRegister = () => handleAuthAction("register");
 window.handleAuthLogout = handleLogout;
@@ -207,6 +375,7 @@ window.handleResultReady = handleResultReady;
 window.renderHistoryPage = renderHistoryPage;
 window.exportLatestResultPDF = exportLatestResult;
 window.exportHistoryResult = exportHistoryResult;
+window.runDecisionTreeAnalysis = runDecisionTreeAnalysis;
 
 watchAuthState((user) => {
   currentUser = user;
